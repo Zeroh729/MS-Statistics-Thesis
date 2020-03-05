@@ -1,0 +1,68 @@
+1. Add figures
+    Include a figure in PNG format
+        \begin{figure}[t]                %-- use [t] to place figure at top, [b] to place at the bottom, [h] for here
+        \centering                    %-- use this to center the figure
+        \includegraphics{DisneyChart.png}      %-- include image file named as "disneychart.png" 
+        \caption{This is the figure's caption -- Disney stock chart}
+            \label{fig:disneystock}
+        \end{figure}
+
+    Citing figures
+        \figref{fig:disneystock} 
+
+2. Add Citations
+    Smith (1970) compared . . .                             \citeA{kartch:2000:ERA} compared...
+    In (Smith, 1970), . . .                                 In \cite{kartch:2000:ERA}...
+    In 1970, Smith compared . . .                           In \citeyearNP{kartch:2000:ERA}, \citeauthor{kartch:2000:ERA} compared...
+    Smith, et al., (1970) compared . . .                    \shortciteA{fedkiw:2001:VSO} compared... 
+    In a study of reactions (Smith, et al., 1970), . . .    In a study of reactions \cite{fedkiw:2001:VSO}...
+    In 1970, Smith, et al., compared . . .                  In \citeyearNP{fedkiw:2001:VSO}, \shortciteauthor{fedkiw:2001:VSO}, compared...
+
+
+    For APA citation details, refer
+    to \url{http://www.ctan.org/tex-archive/biblio/bibtex/contrib/apacite/}
+
+3. Add List
+    - Unordered
+        \begin{itemize}
+            \item x
+            \item y
+            \item z
+        \end{itemize}
+    
+    - Ordered
+        \begin{enumerate}
+            \item x
+            \item y
+            \item z
+        \end{enumerate}
+
+4. Add Section & Subsection
+    Section
+        \section{Research Objectives}
+        \label{sec:researchobjectives}
+
+    Subsection
+        \subsection{General Objective}
+        \label{sec:generalobjective}
+
+    Citing a section
+        In Section \ref{sec:researchobjectives}
+
+5. Add Table
+\begin{table}[ht]   %t means place on top, replace with b if you want to place at the bottom
+    \centering
+    \caption{Timetable of Activities} \vspace{0.25em}
+    \begin{tabular}{|p{2in}|c|c|c|c|c|c|c|c|} \hline
+    \centering Activities (2009) & Jan   & Feb & Mar & Apr & May & Jun & Jul \\ \hline
+    Study on Prerequisite Knowledge      &   &  & ~~~\weektwo & \weekfour &  &  &  \\ \hline
+    Review of Existing Racing Strategies & ~~~\weektwo  & \weekfour & \weekfour & \weekfour &  &  &  \\ \hline
+    Identification of Best Features      &   &  &  & \weekfour & \weektwo~~~ &  &  \\ \hline
+    Development of Racing Strategies     &   &  &  & ~~~\weektwo & \weekfour & \weektwo~~~ &  \\ \hline
+    Simulation of Racing Strategies      &   &  &  & ~~~\weektwo & \weekfour & \weekthree~~ &  \\ \hline
+    Analysis and Interpretation of the Results &   &  &  &  & \weekfour & \weekfour & \weekone~~~~~ \\ \hline
+    Documentation & ~~~\weektwo  & \weekfour & \weekfour & \weekfour & \weekfour & \weekfour & \weektwo~~~ \\ \hline
+    \end{tabular}
+    \label{tab:timetableactivities}
+\end{table}
+
