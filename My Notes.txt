@@ -1,11 +1,20 @@
 1. Add figures
     Include a figure in PNG format
-        \begin{figure}[t]                %-- use [t] to place figure at top, [b] to place at the bottom, [h] for here
-        \centering                    %-- use this to center the figure
-        \includegraphics{DisneyChart.png}      %-- include image file named as "disneychart.png" 
-        \caption{This is the figure's caption -- Disney stock chart}
-            \label{fig:disneystock}
+        \begin{figure}[t]                   %-- use [t] to place figure at top, [b] to place at the bottom, [h] for here
+            \centering                          %-- use this to center the figure
+            \includegraphics{DisneyChart.png}   %-- include image file named as "disneychart.png" 
+            \caption{This is the figure's caption -- Disney stock chart}
+                \label{fig:disneystock}
         \end{figure}
+
+
+        \begin{figure}[h]
+            \centering
+            \includegraphics[max size={\textwidth}{\textheight}]{workflowVariation.png}
+            \caption{Potential variation components between steps of the dPCR workflow}
+                \label{fig:workflowVariation}
+        \end{figure}
+
 
     Citing figures
         \figref{fig:disneystock} 
@@ -66,3 +75,9 @@
     \label{tab:timetableactivities}
 \end{table}
 
+6. Add mathematical expressions
+    Inline
+            \(x^2 + y^2 = z^2\)
+        
+    New line and centered
+            \[ x^n + y^n = z^n \]
