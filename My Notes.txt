@@ -10,14 +10,15 @@
 
         \begin{figure}[h]
             \centering
-            \includegraphics[max size={\textwidth}{\textheight}]{workflowVariation.png}
-            \caption{Potential variation components between steps of the dPCR workflow}
-                \label{fig:workflowVariation}
+            \includegraphics[max size={\textwidth}{\textheight}]{FILENAME.png}
+            \caption{CAPTION}
+                \label{fig:LABEL}
         \end{figure}
 
 
     Citing figures
-        \figref{fig:disneystock} 
+        Figure 1.1      \figref{fig:disneystock} 
+        1.1             Figure \ref{fig:disneystock}
 
 2. Add Citations
     Smith (1970) compared . . .                             \citeA{kartch:2000:ERA} compared...
@@ -81,3 +82,10 @@
         
     New line and centered
             \[ x^n + y^n = z^n \]
+
+7. Text styles
+    italicize
+        \emph{accident}
+    
+    bold
+        \textbf{greatest} 
