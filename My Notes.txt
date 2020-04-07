@@ -7,11 +7,11 @@
                 \label{fig:disneystock}
         \end{figure}
 
-
+    COPY THIS
         \begin{figure}[h]
             \centering
             \includegraphics[max size={\textwidth}{\textheight}]{FILENAME.png}
-            \caption{CAPTION}
+            \caption[LIST_ENTRY_CAPTION]{CAPTION_HERE \cite{CITE_IF_EVER}}
                 \label{fig:LABEL}
         \end{figure}
 
@@ -22,12 +22,14 @@
 
 2. Add Citations
     Smith (1970) compared . . .                             \citeA{kartch:2000:ERA} compared...
-    In (Smith, 1970), . . .                                 In \cite{kartch:2000:ERA}...
-    In 1970, Smith compared . . .                           In \citeyearNP{kartch:2000:ERA}, \citeauthor{kartch:2000:ERA} compared...
     Smith, et al., (1970) compared . . .                    \shortciteA{fedkiw:2001:VSO} compared... 
     In a study of reactions (Smith, et al., 1970), . . .    In a study of reactions \cite{fedkiw:2001:VSO}...
+
+    In 1970, Smith compared . . .                           In \citeyearNP{kartch:2000:ERA}, \citeauthor{kartch:2000:ERA} compared...
     In 1970, Smith, et al., compared . . .                  In \citeyearNP{fedkiw:2001:VSO}, \shortciteauthor{fedkiw:2001:VSO}, compared...
 
+    In (Smith, 1970), . . .                                 In \cite{kartch:2000:ERA}...
+    Multiple Citations                                      \cite{citation1, citation2, citation3}
 
     For APA citation details, refer
     to \url{http://www.ctan.org/tex-archive/biblio/bibtex/contrib/apacite/}
@@ -38,6 +40,17 @@
             \item x
             \item y
             \item z
+        \end{itemize}
+
+    - w/ Subitems
+        \begin{itemize}
+            \item x
+            \item y
+            \item z
+            \begin{itemize}
+                \item first nested item
+                \item second nested item
+            \end{itemize}
         \end{itemize}
     
     - Ordered
