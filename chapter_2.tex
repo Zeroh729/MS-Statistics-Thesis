@@ -6,7 +6,7 @@
 
 \subsection{Threshold}
 \label{sec:threshold}
-The most common method in classifying positive and negative droplets are by enforcing a hard threshold. All droplets with a fluorescence amplitude greater than this threshold is then classified as positive, and negative otherwise. The following sections explore how a threshold can be determined with statistical methods.
+The most common method in classifying positive and negative droplets is by enforcing a hard threshold. Generally, all droplets with a fluorescence amplitude greater than this threshold are then classified as positive, and negative otherwise. The following sections explore how a threshold can be determined with statistical methods.
 
 One popular tool incorporated with automatic thresholding is the QuantaSoft software. The QuantaSoft software is the dPCR analysis tool that comes with the Bio-Rad droplet digital PCR System package. It allows for the setting up of sample and experiments, running and controlling the instrument, and the analysis of the NA concentration \cite{BioRad2019}. According to the Bio-Rad Laboratories website (https://www.bio-rad.com), it has been a leading product developer for over 65 years in the research fields of life science and clinical diagnostics. Among its popular focus areas, dPCR is one of its most featured technology, providing droplet dPCR instruments; kits, reagents and assays; and other consumables. Several studies in hospitals \cite{Lopez2016,Chen2018,Abed2017,Tagliapietra2020}, public health \cite{Hussain2017,Nystrand2018}, food safety \cite{Chen2020,Capobianco2020,Basanisi2020}, upto environmental quality \cite{Hamaguchi2018,Jahne2020,Dobnik2016,Mauvisseau2019} have found the Bio-Rad QuantaSoft dPCR systems useful for their analyses. 
 
@@ -36,10 +36,17 @@ TODO - look for 2 more other Quantasoft experiments with bad results
 %  What are their recommendations of using the Quantasoft software?
 These studies concluded that the QuantaSoft software requires a well-optimized assay with good discrimination of positive and negative droplets for its threshold to be reliable.
 
+\subsection{Manual Threshold}
+\label{sec:manthreshold}
+As opposed to the automatic threshold, \citeA{Dreo2014} proposes setting a manual global threshold (MTg) determined by no template control (NTC) samples. This takes into consideration that individual assays behave differently, and could require expert intervention. For example, the threshold for a well-optimised assay was defined as the NTC mean + 6 standard deviations; on the other hand, a noisy assay had its threshold set above the highest value in NTC samples. It is expected in the latter example that the sensitivity would be lower, due to its high threshold. However, the paper claims that this resulted in high analytical sensitivity for that assay. A major disadvantage in this approach is the clear definition or guidelines in setting the MTg; this consequently will cause reproducibility issues for succeeding experiments and other researchers.
 
-\subsection{Population Detection of Gaussian Kernel Densities}
+\subsection{Kernel Density Estimation (KDE) Clustering}
 \label{sec:peakdetectionkde}
-Although not named in the paper of \citeA{Lievens2016}, cloudy is the name of the function in their source code provided in their supplementary file. Cloudy implements the following steps for threshold calculation, which is also documented in their paper:
+The positive and negative droplet classification can be framed as a clustering problem. One solution is by using the popular theory of kernel density estimation (KDE); whereby each data point influence is modeled using a kernel function — frequently of Gaussian distribution, and the sum of all the kernel functions would be the overall density of the data. Clusters can then be derived from the estimated densities depending on its application \cite{Hinneburg2003}.
+
+KDE has been particularly helpful in spatial analysis. Clusters were detected in areas with diabetes in Berlin \cite{Kauhl2016}, HCV hepatitis C virus in Massachusetts \cite{Stopka2017}, and crime hotspots in Brazil \cite{Junior2019}. For other data types, KDE clustering has been improved in an algorithm developed by \shortciteA{Rodriguez2014}, called clustering by fast search and find of density peaks. This technique has piqued the interests of many researchers; thereby further improving the original limitations via DNA genetic algorithm \cite{Zang2017}, heat diffusion \cite{Mehmood2016}, and entropy of data field \cite{Wang2016}.  
+
+Although not named in the dPCR optimization paper of \citeA{Lievens2016}, cloudy is the name of the function in their supplementary source code file that calculates the threshold from the clusters found by using Gaussian KDE. The following steps explain this in more detail:
 \begin{enumerate}
     \item Estimate the density function of the fluorescence using a Guassian kernel density with a minimum bandwith of 50
     \item Identify density peaks using a sliding window approach. The subsequent steps will differ according to if one, two, or more than three peaks were found.  But generally, the proceeding steps are followed.
@@ -67,19 +74,20 @@ Special cases such as overlapping population boundaries and threshold placement 
         \label{fig:skeweddist}
 \end{figure}
 
-TODO - add their results from this algorithm
+It is noted that the context of the threshold setting here is based on in-house data for studying dPCR experiment optimization, and not necessarily as a classifier for external data. The constant threshold criterium enables the control for other PCR experimental factors, such as sonication, PCR enhancers, annealing conditions, and number of cycles, to achieve optimization or diminishing rain droplets for dPCR experiments.
 
-\subsection{K Nearest Neighbors}
+\subsection{K-Nearest-Neighbors (KNN)}
 \label{sec:knn}
-% TODO - Define definetherain and its benefits
+% TODO - Define K Nearest Neighbor and its other applications
+Based on the research papers curated by \citeA{Peterson:2009}, K-nearest-neighbor (KNN) is a unsupervised clustering approach that should be among the first methods considered for data with little to no information about its distribution. This clustering method operates on the chosen distance measure — commonly the Euclidean distance — between the observations. Due to its simplicity, data from various fields have applied KNN such as in a movie recommendation system \cite{Ahuja2019}, climate classification \cite{Shi2020}, breast cancer diagnostics \cite{Mittal2019}, among others.
 
-
-definetherain follows these steps for classification:
-\begin{itemize}
-    \item Setup a control well of known input copy numbers. 
-    \item Cluster using k-nearest neighbor with \(k=2\). 
-    \item Using cluster means and standard deviation, rain in subsequent test samples are classified if it is not within the range of mean \(\pm\) 3 standard deviations of the negative cluster and mean \(\pm\) 3 standard deviations of the positive cluster.
-\end{itemize}
+An open-source tool developed by \shortciteA{Jones2014}, called definetherain, utilizes the KNN algorithm in identifying rain droplets. According to their research, they claim that definetherain is accurate in estimating assays with low template numbers, which is particularly applicable in research fields such as the HIV-1 cure research. definetherain follows these steps for classification:
+\begin{enumerate}
+    \item Setup a positive control sample of known input copy numbers. 
+    \item Cluster the droplets using kNN with \(k=2\). The cluster on the left is the negative cluster, and on the right is the positive cluster. 
+    \item Observations between the range of the negative cluster's mean + 3 standard deviations and the positive cluster's mean - 3 standard deviations are classified as rain.
+    \item Rain droplets are not included in the final calculation of the concentration estimate.
+\end{enumerate}
 
 \begin{figure}[h]
     \centering
@@ -88,12 +96,47 @@ definetherain follows these steps for classification:
         \label{fig:dtrsample}
 \end{figure}
 
-% TODO - Studies that use dtr
+Unlike the other methods discussed here, this tool produces two cutoff values — one for each cluster. The droplets falling between these two values are classified as rain. These cutoff values are solely dependent on the control sample. The disadvantage of this is that the control has to be representative of the NA target; otherwise, concentration estimates would be biased. 
+
+
+% TODO - Studies that use dtr ? 
+
+
+\section{Model-Based Clustering}
+\label{sec:modelbasedclustering}
+% TODO - describe model-based clustering and other applications
 
 
 \subsection{Non-parametric Mixture Models}
 \label{sec:nonparametricmixmodels}
 
-\section{Model-Based Clustering}
-\label{sec:modelbasedclustering}
+\shortciteA{Jacobs2017} developed Umbrella, a model-based clustering for dPCR droplets available in source code (https://github.com/statOmics/umbrella). After providing a representative NTC sample(s), the procedure follows a series of estimation and assumptions in deriving the final estimated concentration. An oversimplification of the Umbrella procedure, that skips the detailed steps for handling specific cases, are as follows:
+\begin{enumerate}
+    \item The NTC distribution \(f_0(x)\) is assumed to follow a unimodal distribution. The location and variation is estimated by the mode and mean of absolute deviation (MAD), respectively.
+    \item The fluorescence intensitities \(x\) observed in partitions of a target partition set \(A\) is assumed to have a mixture density 
+    \[f_A(x) = p_{0,A}f_{0,A}(x) + (1-p_{0,A})f_{1,A}(x)\]
+    \begin{itemize}
+        \item \(p_{0,A}\) = proportion of negative partitions
+        \item \(f_{0,A}(x)\) = densities of the partitions without target copy (null component of the target partition set \(A\))
+        \item \((1-p_{0,A})\) = proportion of positive partitions
+        \item \(f_{1,A}(x)\) = densities of the partitions with target copy
+    \end{itemize}
+    \item Begin estimating the parameters by first aligning the modes of  the null component of \(f_A(x)\) and the NTC reference \(f_0(x)\).
+    \item Discretize the aligned distributions by generating a histogram with the same bins.
+    \item The bin counts of the aligned distribution are modeled using a Poisson regression model, resulting in estimates for \(\hat{p}_{0,A}\),\(\hat{f_{0}}(x)\), and \(\hat{f_{A}}(x)\).
+    \item The posterior probability that partition \(i\) is void of the NA target with fluorescence intensity \(x_i\) of partition set \(A\), \(\hat{p_{0,A}}\), can be defined from the estimated \(\hat{p}_{0,A}\) from the previous step as
+    \[ \hat{p}_{i,0,A}=\hat{p}_{0,A}\left(\begin{array}{c}\hat{f}_{0,A}(x_i)\\ \hat{f}_{A}(x_i)\end{array}\right) \]
+    \item The Umbrella threshold estimator is then determined by the estimated \(\hat{p}_{i,0,A}\). For intensity value \(i\), the interpretation of the posterior probabilities are 
+    \begin{itemize}
+        \item \(\hat{p}_{i,0,A} > 80\%\) are considered negative partitions with a probability of \(\leq20\%\) to be false negatives
+        \item \(\hat{p}_{i,0,A} < 5\%\) are considered positive partitions with a probability of \(\leq5\%\) to be false positives
+        \item \(5\% \leq \hat{p}_{i,0,A} \leq 80\%\) are considered as rain
+    \end{itemize}
+\end{enumerate}
 
+
+The mode and MAD, as the location and spread estimators for the null NTC distribution, \(f_{0}(x)\), are chosen due to its robustness and insensitivity to skewed tails. Only observations within 10 deviations of the mode are included for the null model.
+
+Following the assumption of a mixture density in step 2, unlike most model-based clustering algorithms, Umbrella does not assume normal densities for \(f_{1,A}(x)\) and \(f_{0,A}(x)\), the partitions with and without the NA target, respectively. This is due to the exhibition of dPCR fluorescence intensities to be non-normal, as clusters tend to have heavy tails to the left or to the right. The solution for this is the use of non-parametric density estimation in step 3.
+
+After estimating all the components in the mixture model from steps 3 - 5, the component of interest \(\hat{p_{0,A}}\) is then used to determine \(\hat{p}_{i,0,A}\) in step 6. Finally, this is used as the basis for Umbrella threshold estimator in step 7. It is cautioned that Umbrella may not be precise in detection experiments for low copy samples, as classifying individual samples is not the strength of this method.
