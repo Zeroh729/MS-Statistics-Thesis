@@ -4,13 +4,13 @@
 \section{dPCR Droplet Classification Methods}
 \label{sec:dpcrclassifiers}
 
-\subsection{Threshold}
-\label{sec:threshold}
-The most common method in classifying positive and negative droplets is by enforcing a hard threshold. Generally, all droplets with a fluorescence amplitude greater than this threshold are then classified as positive, and negative otherwise. The following sections explore how a threshold can be determined with statistical methods.
+\subsection{Droplet dPCR (ddPCR) System}
+\label{sec:ddpcrsystem}
+The most common method in classifying positive and negative droplets is by enforcing a hard threshold. Generally, all droplets with a fluorescence amplitude greater than this threshold are then classified as positive, and negative otherwise. 
 
-One popular tool incorporated with automatic thresholding is the QuantaSoft software. The QuantaSoft software is the dPCR analysis tool that comes with the Bio-Rad droplet digital PCR System package. It allows for the setting up of sample and experiments, running and controlling the instrument, and the analysis of the NA concentration \cite{BioRad2019}. According to the Bio-Rad Laboratories website (https://www.bio-rad.com), it has been a leading product developer for over 65 years in the research fields of life science and clinical diagnostics. Among its popular focus areas, dPCR is one of its most featured technology, providing droplet dPCR instruments; kits, reagents and assays; and other consumables. Several studies in hospitals \cite{Lopez2016,Chen2018,Abed2017,Tagliapietra2020}, public health \cite{Hussain2017,Nystrand2018}, food safety \cite{Chen2020,Capobianco2020,Basanisi2020}, upto environmental quality \cite{Hamaguchi2018,Jahne2020,Dobnik2016,Mauvisseau2019} have found the Bio-Rad QuantaSoft dPCR systems useful for their analyses. 
+One popular tool incorporated with automatic thresholding is the QuantaSoft software. The QuantaSoft software is the dPCR analysis tool that comes with the Bio-Rad droplet dPCR (ddPCR) System package. It allows for the setting up of sample and experiments, running and controlling the instrument, and finally, the analysis of the NA concentration \cite{Bio-Rad2019}. According to the Bio-Rad Laboratories website (https://www.bio-rad.com), it has been a leading product developer for 65 years in the research fields of life science and clinical diagnostics. Among its popular focus areas, dPCR is one of its most featured technology, providing ddPCR instruments; kits, reagents and assays; and other consumables. Several studies in hospitals \cite{Lopez2016,Chen2018,Abed2017,Tagliapietra2020}, public health \cite{Hussain2017,Nystrand2018}, food safety \cite{Chen2020,Capobianco2020,Basanisi2020}, upto environmental quality \cite{Hamaguchi2018,Jahne2020,Dobnik2016,Mauvisseau2019} have found the Bio-Rad QuantaSoft dPCR systems useful for their analyses. 
 
-Of all the features of the QuantaSoft software, the focus of this section is on how the software sets the threshold. By default, QuantaSoft sets an automatic threshold to the single-well or multiple-well amplitude data; a demonstration is shown in \figref{fig:demoQuantThreshold}. As with other automated tools, its documentation recommends reviewing this threshold to make changes if needed; and thus, manually setting the threshold is also allowed. Unfortunately, the calculation of the automatic threshold is not publicly available.
+Of all the QuantaSoft software features, the focus of this section is on its threshold setting. By default, QuantaSoft sets an automatic threshold to the single-well or multiple-well amplitude data; a demonstration is shown in \figref{fig:demoQuantThreshold}. As with other automated tools, its documentation recommends reviewing this threshold to make changes if needed; and thus, manually setting the threshold is also allowed. Unfortunately, the calculation of the automatic threshold is not publicly available.
 
 \begin{figure}[h]
     \centering
@@ -19,30 +19,18 @@ Of all the features of the QuantaSoft software, the focus of this section is on 
         \label{fig:demoQuantThreshold}
 \end{figure}
 
+The evaluation of the QuantaSoft software show exemplary results from the food safety study of \citeA{Basanisi2020}, whereby nine pure meat samples were discriminated with 100\% diagnostic accuracy, sensitivity, and specificity. However, upon checking the authenticity of twenty commercially available meat products, twelve samples were said to contain DNA traces of other animals not declared. Among the several reasons for this high detection, \citeA{Basanisi2020} suggests the need for a highly sensitive and specific test in the molecular level. Observation of NA molecules can be done through their droplet fluorescence in a dPCR assay.
 
-%  What type of experiments are suitable for Quantasoft?
-TODO - look for Quantasoft experiments
+Assessing the QuantaSoft software's ability to classify droplets, it was shown that for samples exhibiting a substantial amount of intermediate fluorescence, the system fails to determine a threshold (outputs "No call"). This was the case in the two bacteria study of \cite{Dreo2014}, that were ran on very high concentrations. In the case of low bacteria concentrations, droplets near the negative droplets were classified as positives. This study concluded that the QuantaSoft software requires a well-optimized assay with good discrimination of positive and negative droplets for its threshold to be reliable.
 
-%  What are the results of experiments using Quantasoft?
 
-[1]
-For samples exhibiting a substantial amount of intermediate fluorescence, the QuantaSoft software fails to determine a threshold, resulting in a "No call" output. This was the case when a study of two bacteria \cite{Dreo2014} was ran on very high concentration. In the case of low bacteria concentrations, droplets near the negative droplets were classified as positives. 
-
-TODO - look for 2 more other Quantasoft experiments with bad results
-% [2]
-
-% [3]
-
-%  What are their recommendations of using the Quantasoft software?
-These studies concluded that the QuantaSoft software requires a well-optimized assay with good discrimination of positive and negative droplets for its threshold to be reliable.
-
-\subsection{Manual Threshold}
+\subsection{Manual Global Threshold (MTg)}
 \label{sec:manthreshold}
-As opposed to the automatic threshold, \citeA{Dreo2014} proposes setting a manual global threshold (MTg) determined by no template control (NTC) samples. This takes into consideration that individual assays behave differently, and could require expert intervention. For example, the threshold for a well-optimised assay was defined as the NTC mean + 6 standard deviations; on the other hand, a noisy assay had its threshold set above the highest value in NTC samples. It is expected in the latter example that the sensitivity would be lower, due to its high threshold. However, the paper claims that this resulted in high analytical sensitivity for that assay. A major disadvantage in this approach is the clear definition or guidelines in setting the MTg; this consequently will cause reproducibility issues for succeeding experiments and other researchers.
+As opposed to the automatic threshold, \citeA{Dreo2014} proposes setting a manual global threshold (MTg) determined by no template control (NTC) samples. This takes into consideration that individual assays behave differently, and could require expert intervention. For example, the threshold for a well-optimised assay was defined as the NTC mean + 6 standard deviations; on the other hand, a noisy assay had its threshold set above the highest value in NTC samples. It is expected in the latter example that the sensitivity would be lower, due to its high threshold. However, the paper claims that this resulted in high analytical sensitivity for that assay. A major disadvantage in this approach is the clear definition or guidelines in setting the MTg; this consequently will cause reproducibility issues for succeeding experiments and external researchers.
 
-\subsection{Kernel Density Estimation (KDE) Clustering}
+\subsection{Kernel Density Estimation (KDE)}
 \label{sec:peakdetectionkde}
-The positive and negative droplet classification can be framed as a clustering problem. One solution is by using the popular theory of kernel density estimation (KDE); whereby each data point influence is modeled using a kernel function — frequently of Gaussian distribution, and the sum of all the kernel functions would be the overall density of the data. Clusters can then be derived from the estimated densities depending on its application \cite{Hinneburg2003}.
+The positive and negative droplet classification can be framed as a clustering problem. One solution is by using the popular theory of kernel density estimation (KDE); whereby each data point influence is modeled using a kernel function — frequently Gaussian distributed, and the sum of all the kernel functions would be the overall density of the data. Clusters can then be derived from the estimated densities depending on its application \cite{Hinneburg2003}.
 
 KDE has been particularly helpful in spatial analysis. Clusters were detected in areas with diabetes in Berlin \cite{Kauhl2016}, HCV hepatitis C virus in Massachusetts \cite{Stopka2017}, and crime hotspots in Brazil \cite{Junior2019}. For other data types, KDE clustering has been improved in an algorithm developed by \shortciteA{Rodriguez2014}, called clustering by fast search and find of density peaks. This technique has piqued the interests of many researchers; thereby further improving the original limitations via DNA genetic algorithm \cite{Zang2017}, heat diffusion \cite{Mehmood2016}, and entropy of data field \cite{Wang2016}.  
 
@@ -101,13 +89,10 @@ Unlike the other methods discussed here, this tool produces two cutoff values �
 % TODO - Studies that use dtr ? 
 
 
-\section{Model-Based Clustering}
+\subsection{Model-Based Clustering}
 \label{sec:modelbasedclustering}
-% TODO - describe model-based clustering and other applications
+As opposed to the distance-based clustering in Section \ref{sec:knn}, a probabilistic approach is achieved with model-based clustering. According to \citeA{Mcnicholas2016}, in this approach, a cluster is defined as a unimodal component within a finite mixture model. The mixture model has to be appropriate in such that its parameters are flexible for fitting the characteristics of the data. Each observation, therefore, has a calculated probability of it belonging to a group. Using model-based clustering, studies have shown abstract data types with satisfactory outcomes. One example is image data in the study of \cite{Choy2017}. They were able to perform image segmentation using the generalized Gaussian density model. Each cluster formed is interpreted as an object, and the number of which is identified via a validation technique. Their algorithm was able to segment objects such as a starfish, cat, or tree in photographs. Additionally, using genetic data, \citeA{Li2018} discovered a potential differentially-variable microRNA (miRNA) not yet been reported in literature, upon fitting a three-component multivariate normal distribution to miRNA expression levels.
 
-
-\subsection{Non-parametric Mixture Models}
-\label{sec:nonparametricmixmodels}
 
 \shortciteA{Jacobs2017} developed Umbrella, a model-based clustering for dPCR droplets available in source code (https://github.com/statOmics/umbrella). After providing a representative NTC sample(s), the procedure follows a series of estimation and assumptions in deriving the final estimated concentration. An oversimplification of the Umbrella procedure, that skips the detailed steps for handling specific cases, are as follows:
 \begin{enumerate}
@@ -139,3 +124,9 @@ The mode and MAD, as the location and spread estimators for the null NTC distrib
 Following the assumption of a mixture density in step 2, unlike most model-based clustering algorithms, Umbrella does not assume normal densities for \(f_{1,A}(x)\) and \(f_{0,A}(x)\), the partitions with and without the NA target, respectively. This is due to the exhibition of dPCR fluorescence intensities to be non-normal, as clusters tend to have heavy tails to the left or to the right. The solution for this is the use of non-parametric density estimation in step 3.
 
 After estimating all the components in the mixture model from steps 3 - 5, the component of interest \(\hat{p_{0,A}}\) is then used to determine \(\hat{p}_{i,0,A}\) in step 6. Finally, this is used as the basis for Umbrella threshold estimator in step 7. It is cautioned that Umbrella may not be precise in detection experiments for low copy samples, as classifying individual samples is not the strength of this method.
+
+
+
+\section{Expectation-Maximization (EM) Clustering}
+\label{sec:emclustering}
+% TODO - Expectation Maximization
