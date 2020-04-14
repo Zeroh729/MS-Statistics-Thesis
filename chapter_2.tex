@@ -1,7 +1,7 @@
 \chapter{Review of Related Literature}
 \label{sec:rrl} 
 
-\section{dPCR Droplet Classification Methods}
+\section{Current dPCR Droplet Classification Methods}
 \label{sec:dpcrclassifiers}
 
 \subsection{Droplet dPCR (ddPCR) System}
@@ -88,13 +88,14 @@ Unlike the other methods discussed here, this tool produces two cutoff values �
 
 % TODO - Studies that use dtr ? 
 
+\subsection{Model-Based Clustering w/ Non-parametric Density Estimation}
+\label{sec:nonparamdensityest}
 
-\subsection{Model-Based Clustering}
-\label{sec:modelbasedclustering}
-As opposed to the distance-based clustering in Section \ref{sec:knn}, a probabilistic approach is achieved with model-based clustering. According to \citeA{Mcnicholas2016}, in this approach, a cluster is defined as a unimodal component within a finite mixture model. The mixture model has to be appropriate in such that its parameters are flexible for fitting the characteristics of the data. Each observation, therefore, has a calculated probability of it belonging to a group. Using model-based clustering, studies have shown abstract data types with satisfactory outcomes. One example is image data in the study of \cite{Choy2017}. They were able to perform image segmentation using the generalized Gaussian density model. Each cluster formed is interpreted as an object, and the number of which is identified via a validation technique. Their algorithm was able to segment objects such as a starfish, cat, or tree in photographs. Additionally, using genetic data, \citeA{Li2018} discovered a potential differentially-variable microRNA (miRNA) not yet been reported in literature, upon fitting a three-component multivariate normal distribution to miRNA expression levels.
+As opposed to the distance-based clustering in Section \ref{sec:knn}, a probabilistic approach is achieved with model-based clustering. According to \citeA{Mcnicholas2016}, a finite mixture model is a sum of weighted density components. This mixture model has to be appropriate such that its parameters are flexible for fitting the characteristics of the data. In this approach, each unimodal density component are defined as a cluster; and each observation has a calculated probability of it belonging to a cluster. 
 
+In an electricity usage profiling study, \citeA{Li2018} noticed several elongated ellipses in the scatterplot of electricity usage data, urging them to use Gaussian components for their mixture model. In another example, \cite{Choy2017} performed image segmentation using the generalized Gaussian density model, where each cluster formed is interpreted as an object. Their algorithm was able to segment objects such as a starfish, cat, or tree in photographs. Additionally, using genetic data, \citeA{Li2018} discovered a potential differentially-variable microRNA (miRNA) not yet reported in literature, upon fitting a three-component multivariate normal distribution to miRNA expression levels. The assumption of the Gaussian/normal component distributions are common in model-based clustering; however, in the succeeding texts, dPCR droplets is claimed to violate this assumption. 
 
-\shortciteA{Jacobs2017} developed Umbrella, a model-based clustering for dPCR droplets available in source code (https://github.com/statOmics/umbrella). After providing a representative NTC sample(s), the procedure follows a series of estimation and assumptions in deriving the final estimated concentration. An oversimplification of the Umbrella procedure, that skips the detailed steps for handling specific cases, are as follows:
+\shortciteA{Jacobs2017} developed Umbrella, a model-based clustering for dPCR droplets using nonparametric density estimation (https://github.com/statOmics/umbrella). Umbrella requires a representative NTC sample(s), the procedure then follows a series of estimation and assumptions in deriving the final estimated concentration. An oversimplification of the Umbrella procedure, that skips the detailed steps for handling specific cases, are as follows:
 \begin{enumerate}
     \item The NTC distribution \(f_0(x)\) is assumed to follow a unimodal distribution. The location and variation is estimated by the mode and mean of absolute deviation (MAD), respectively.
     \item The fluorescence intensitities \(x\) observed in partitions of a target partition set \(A\) is assumed to have a mixture density 
@@ -125,8 +126,13 @@ Following the assumption of a mixture density in step 2, unlike most model-based
 
 After estimating all the components in the mixture model from steps 3 - 5, the component of interest \(\hat{p_{0,A}}\) is then used to determine \(\hat{p}_{i,0,A}\) in step 6. Finally, this is used as the basis for Umbrella threshold estimator in step 7. It is cautioned that Umbrella may not be precise in detection experiments for low copy samples, as classifying individual samples is not the strength of this method.
 
-
-
 \section{Expectation-Maximization (EM) Clustering}
 \label{sec:emclustering}
-% TODO - Expectation Maximization
+
+Recall from Section \ref{sec:nonparamdensityest}, model-based clustering refers to fitting a finite mixture model given the data set \(X\); then the cluster membership of observation \(x_i\) is determined by the highest probability of it belonging to a density component. Building the mixture model \(f(x|\Theta)\) requires the determination of 1) \(G\) — the number of mixture components (clusters), and 2) \(f_g(x|\theta_g)\) — the distribution assumed to be followed by the mixture component \(g\). 
+
+A common method for determining \(G\) is by selecting the model with the lowest Bayesian Information Criterion (BIC) amongst the proposed \(G\)-component mixture models. As mentioned in the model-based clustering examples in Section \ref{sec:nonparamdensityest}, the mixture components are frequently assumed to follow a Gaussian distribution, and is also known as Gaussian Mixture Model (GMM). Although popular, GMMs poorly fit the data that exhibit skewness and different levels of kurtosis, consequently leading to overestimation on the number of clusters \cite{Dang2019}. Alternatively, the following distributions can better generalize these kinds of data: multivariate \(t\), skew-\(t\), multivariate power exponential, variance-gamma, generalized hyperbolic, etc. Unlike Gaussian, these component models are flexible in data of varying tail weight, peakedness, and skewness.
+
+After determining the distribution of \(G\) mixture components, the next problem is on how to estimate its corresponding parameter set \(\Theta*\). Expectation-Maximization (EM), a well-known parameter estimation algorithm, is an iterative procedure that maximizes the likelihood of the parameters given the observed data \cite{Garriga2016}. In the EM procedure, the parameter set is initially guessed and is re-estimated in every iteration of the E-step and M-step, until the parameter set reaches convergence. E-step computes the likelihood weight, or the posterior probability, of each data point \(x_i\) belonging to a component \(g\). M-step re-estimates new parameters that maximize the likelihood of these weights for each component. The result of EM guarantees to reach a local maximum for parametric distributions. The direct application of using the final EM posterior probabilities in assigning data points to groups is called EM Clustering (EMC) \cite{Garriga2016}. 
+
+For dPCR droplets classification, since the groups of interest are the positive and negative droplets, a two-component mixture model suffices. However, there is room for research in identifying the fluorescence intensity distribution that will fit the characteristics of the positive/negative groups. Since heavy tails are observed in fluorescence densities in \figref{fig:skeweddist}, its distribution appears to be nonnormal, as also stated by \citeA{Jacobs2017}.
