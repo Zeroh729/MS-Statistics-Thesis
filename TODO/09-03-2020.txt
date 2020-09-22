@@ -1,0 +1,1 @@
+1. Evaluate the use of BIC or ICL to select between EM-T or EM-skewT

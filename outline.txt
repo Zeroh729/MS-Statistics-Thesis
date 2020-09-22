@@ -1,0 +1,44 @@
+Chapter 2 - RRL
+	2.1 Quantification and detection tools in ddPCR
+		2.1.1 - BioRad Quantasoft
+		2.1.2 - Cloudy
+		2.1.3 - Umbrella
+		2.1.4 - ddpcRquant
+		2.1.5 - definetherain
+	2.2 Expectation-Maximization Clustering
+
+Chapter 3 - Theoretical Framework
+	3.1 EM Clustering
+		3.1.1 G-Component Finite Mixture Density
+		3.1.2 Model-based clustering
+		3.1.3 Expectation Maximization
+	3.2 EM Parameter Initialization
+		3.2.1 Kmeans Clustering
+		3.2.2 Heirarchical Clustering
+		3.2.3 Peak Detection
+	%% 3.3 Mixture model selection
+	%%	3.3.2 BIC
+	%%	3.3.3 ICL
+	3.4 Evaluation Metrics
+		3.4.1 Estimator of lambda - DNA copies per partition
+		3.4.2 Log-linear relationship of lambda and dilution factor
+		3.4.3 Coefficient of Variation
+
+Chapter 4 - Methodology	
+	4.1 Data
+		4.1.1 Real Dataset
+		4.1.2 Simulated Dataset
+	4.2 EM Model fitting
+	4.3 Performance Evaluation of Quantification tools
+
+Chapter 5 - Results and Discussion
+	5.1 - EM-T and EM-skewT Model fitting
+		5.1.1 - Analysis of Parameter Initialization Methods
+		%% 5.1.2 - Model Selection
+	5.2 - Performance Evaluation with Real dataset
+		5.2.1 - Accuracy of estimates in dilution series
+		5.2.2 - Precision of estimates in repeated experiments
+	5.3 - Performance Evaluation with Simulated dataset
+
+
+

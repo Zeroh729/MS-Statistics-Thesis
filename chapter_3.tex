@@ -64,5 +64,45 @@ An approach to finding a maximized likelihood function set \(\theta^*\) for a G-
 
 
 
-\section{Performance Evaluation}
-\label{sec:emclustering_ch3}
+
+
+\section{EM Parameter Initialization}
+\label{sec:emparaminit_ch3}
+
+\subsection{Kmeans Clustering}
+\label{sec:kmeans}
+
+\subsection{Heirarchical Clustering}
+\label{sec:hclust}
+
+\subsection{Peak Detection}
+\label{sec:peakdetection}
+
+\section{Evaluation Metrics}
+\label{sec:evalmetric_ch3}
+
+\subsection{Target copies per partition - \(\lambda\)}
+\label{sec:lambda}
+To count the number of target copies in a sample assay, the count of target copies per partition is determined. A partition is positive if it contains 1 or more target copies, otherwise, it is negative. The number of target copies in a partition is assumed to have a Poisson distribution
+\[ P(x) = \frac{\lambda^xe^{-\lambda}}{x!} \],
+
+where \(x\) is the count of target copies. The average occupancy per partition can then be derived as follows:
+\[ 
+    \begin{aligned}
+        1-P(x=0) &= P(x>0)\\ 
+        1-e^{-\lambda} &= \frac{N_{pos}}{N_{tot}}\\ 
+        e^{-\lambda} &= 1-\frac{N_{pos}}{N_{tot}}\\ 
+        e^{-\lambda} &= \frac{N_{neg}}{N_{tot}}\\ 
+        \hat{\lambda} &= -ln(\frac{N_{neg}}{N_{tot}})
+    \end{aligned}
+\]
+
+where \(N_{tot}\),\(N_{pos}\),and \(N_{neg}\) is the count of the total, positive, and negative partitions in the assay, respectively. The target concentration ()
+
+
+
+\subsection{Log-linear relationship of \(\lambda\) and dilution factor}
+\label{sec:loglinear}
+
+\subsection{Coefficient of Variation}
+\label{sec:coeffofvar}

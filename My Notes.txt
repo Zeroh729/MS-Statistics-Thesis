@@ -95,6 +95,14 @@
         
     New line and centered
             \[ x^n + y^n = z^n \]
+    
+    Long aligned equation (\usepackage{amsmath})
+        \[ 
+            \begin{aligned}
+                2X &= Y \\ 
+                X+X &= Y \\ 
+            \end{aligned}
+        \]
 
 7. Text styles
     italicize

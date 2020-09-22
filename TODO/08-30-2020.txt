@@ -1,0 +1,4 @@
+Add to results:
+1. Examination of the confidence interval, how many estimates were off from each others confidence interval?
+2. Add resolution metric from Cloudy?
+3. Include plate 8 in results
