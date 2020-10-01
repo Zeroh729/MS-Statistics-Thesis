@@ -103,6 +103,9 @@
                 X+X &= Y \\ 
             \end{aligned}
         \]
+    
+    // TODO : Add reference to equation
+
 
 7. Text styles
     italicize

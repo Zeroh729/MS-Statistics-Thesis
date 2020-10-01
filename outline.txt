@@ -8,21 +8,28 @@ Chapter 2 - RRL
 	2.2 Expectation-Maximization Clustering
 
 Chapter 3 - Theoretical Framework
-	3.1 EM Clustering
-		3.1.1 G-Component Finite Mixture Density
-		3.1.2 Model-based clustering
-		3.1.3 Expectation Maximization
-	3.2 EM Parameter Initialization
-		3.2.1 Kmeans Clustering
-		3.2.2 Heirarchical Clustering
-		3.2.3 Peak Detection
+	3.1 dPCR Endpoint Fluorescence
+		- Fluorescence intensity (Let X denote a reaction from a well, ganern)
+		- Threshold (if X > threshold, then positive, else negative, ganern)
+	3.2 Target Quantification
+		3.2.1 Stock concentration and Dilution Factor
+		3.2.2 Poisson distribution
+		3.2.3 Log-log linear regression of \lambda and \X_dil
+	3.3 Evaluation Metrics
+		3.3.1 Coefficient of Variation
+		3.3.2 Coefficient of Determination and Residual SE
+	3.4 EM Clustering
+		3.4.1 G-Component Finite Mixture Density
+		3.4.2 Model-based clustering
+		3.4.3 Expectation Maximization
+	3.5 EM Parameter Initialization
+		3.5.1 Kmeans Clustering
+		3.5.2 Heirarchical Clustering
+		3.5.3 Peak Detection
 	%% 3.3 Mixture model selection
 	%%	3.3.2 BIC
 	%%	3.3.3 ICL
-	3.4 Evaluation Metrics
-		3.4.1 Estimator of lambda - DNA copies per partition
-		3.4.2 Log-linear relationship of lambda and dilution factor
-		3.4.3 Coefficient of Variation
+	3.6 Generalized Hyperbolic Distribution for Data Simulation
 
 Chapter 4 - Methodology	
 	4.1 Data

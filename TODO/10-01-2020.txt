@@ -1,0 +1,1 @@
+1. Fit a GHD mixture model in the positive control of Jacobs data. This is to be used for the simulated data.

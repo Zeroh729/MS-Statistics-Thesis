@@ -1,6 +1,143 @@
 \chapter{Theoretical Framework}
 \label{sec:theoreticalframework} 
 
+\section{Target Quantification}
+\label{sec:dpcr_ch3}
+
+\subsection{Fluorescence, Concentration, and Dilution}
+\label{sec:targetconc_ch3_stockDil}
+Most molecules are in its state of lowest vibration level at room temperature, and its state becomes excited upon absorbing energy from light. This excitation elevates the molecule to higher vibration levels that cause the emission of fluorescence. The fluorescence intensity of dilute samples is related to physical variables such as the molecular extinction coefficient, quantum efficiency, intensity of incident light \cite{Elmer2000}.
+
+When only a single fluorescent reporter is present, molecules emit only one type of fluorescence intensity. In the process of PCR, fluorescent probes and primers attach to target sequences in a sample of DNA templates. This sample in the form of a master mix, is then partitioned into thousands of droplets. When the DNA molecules become excited, each droplet emits a fluorescence endpoint intensity \(F\), which are then used to identify if a droplet is positive or negative. A threshold defines the demarcation line to classify positive from negative droplets, such that any intensity less than the threshold is a negative droplet, and positive otherwise \cite{Trypsteen2015}. 
+
+In analytical chemistry, the concentration, \(c\), is a measurement of the amount of solute present in an amount of solution,
+\[
+    c = \frac{\textup{amount of solute}}{\textup{amount of solution}},
+\]
+
+where the fraction can be in terms of molarity (\(\frac{\textup{moles solute}}{\textup{liters solution}}\)), weight percent (\(\frac{\textup{mL solute}}{\textup{100 mL solution}}\)), weight-to-volume percent (\(\frac{\textup{grams solute}}{\textup{100 mL solution}}\)), etc \cite{Harvey2010}. The succeeding concentrations in this paper are in terms of target molecule counts per \(\mu L\), unless otherwise specified.
+
+The dilution factor, \(D\), is the ratio of the initial volume to the final diluted volume (\(V_1 : V_2\)), or equivalently, the ratio of the final diluted concentration to the initial stock concentration (\(c_2 : c_1\)).
+\[
+    D = \frac{V_1}{V_2} = \frac{c_2}{c_1}
+\]
+
+In reporting concentrations, of interest is the unknown stock concentration, \(c_1\). which can be derived from the formula above as 
+\[
+    c_1 = c_2 \times \frac{1}{D}.
+\]
+
+Let \(\lambda\) be the concentration in terms of the average molecule count per droplet. A droplet (analogous to partition, chamber well, or reaction) of the diluted sample has a known constant volume (nL), \(V_{drp}\). Then, the unknown diluted concentration, \(c_2\), can then be derived as 
+\[
+    c_2 = \hat{\lambda} \times \frac{1000}{V_{drp}}.
+\]
+
+In another representation of \(\lambda\), it is defined as the stock concentration of a droplet, \(c_{drp}\), multiplied to the dilution factor \cite{Zhu2014}
+\begin{equation}
+    \lambda = c_{drp} \times D \label{eq:lambda_1}
+\end{equation}
+
+\subsection{Poisson Distribution in Counting Target Copies}
+\label{sec:targetconc_ch3_poisson}
+Let \(X\) be a random variable that represents the number of outcomes that appeared in either a time interval or a region of equal units \(h\) (specified as a time, distance, area, or volume).  \(X\) is defined to follow a Poisson distribution, when the following assumptions are satisfied:
+
+\begin{enumerate}
+    \item For all disjoint fixed time intervals or regions, the number of occurences in the span of \(h\) is independent from each other.
+    \item The probability of only one outcome happening is proportional to the specified \(h\).
+    \item The probability of more than one outcome given a small \(h\) is negligible relative to the probability of only one outcome occuring in the same space.
+\end{enumerate}
+
+The probability distribution function of \(X\) is defined as
+\[
+    p(x; \lambda) = \frac{e^{-\lambda}\lambda^{x}}{x!},\quad x = 0, 1, 2, ...
+\]
+where \(\lambda\) is the average number of outcomes per the fixed time interval or region of \(h\) units \cite{Walpole2011}.
+
+In the context of DNA quantification, the outcome of interest, \(X\) is the number of target copies, and the region of fixed sizes \(h\) corresponds to a droplet of equal volumes \(V_{drp}\). According to the Poisson distribution, the expected value of the target copies \(X\) per droplet is \(\lambda\). Before deriving a formula for \(\lambda\), it is first noted that the droplet outcomes follow a binomial distribution with parameters \(n\), the number of independent trials, and \(p\), the number of successes. Using the MLE of \(p\), the probability of getting a success for each trial is estimated as \(\hat{p}=\frac{x}{n}\); where \(x\) is the observed successes in \(n\) trials. By defining trial as a droplet, and success as a positive droplet, then this consequently means that the probability of getting a positive for one droplet can be estimated as \(P(x>0) = \frac{N_{pos}}{N_{tot}}\), where \(N_{tot}\) and \(N_{pos}\) is the count of the total and positive droplets in the assay, respectively. Combining the concepts from the Poisson and binomial distributions, the expected value of \(X\) (target copies), \(\lambda\), can then be derived as follows :
+\[
+    \begin{aligned}
+        1-P(x=0) &= P(x>0)\\
+        1-e^{-\lambda} &= \frac{N_{pos}}{N_{tot}}\\
+        e^{-\lambda} &= 1-\frac{N_{pos}}{N_{tot}}\\
+        \hat{\lambda} &= -ln(1-\frac{N_{pos}}{N_{tot}})\\
+        \hat{\lambda} &= -ln(\frac{N_{neg}}{N_{tot}})\\
+    \end{aligned}
+\]
+where \(N_{neg}\) is the negative droplet count \cite{Tzonev2018}. For this study, the comparison between quantification methods will be in terms of \(\hat{\lambda}\) concentration, rather than \(c_{1}\),  since the latter is just \(\hat{\lambda}\) multiplied by some constants.
+
+% TODO - Add lambda Confidence Interval formula
+
+\subsection{Log-log Model in Limiting Dilution}
+\label{sec:targetconc_ch3_loglog}
+Serial dilution assays is a technique to estimate the target concentraton in a population; usually, the dilution factor (a level in the dilution series) progresses in a geometric sequence \cite{Deng2017}. For each dilution factor, sample replicates are prepared; producing a total of \(n\) assays. Let \(D_i\) denote the dilution factor at assay sample \(i\), where \(i={1,2,...,n}\). Then, continuing from equation \ref{eq:lambda_1}, for a given droplet with stock conconcentration \(c_{drp}\) of dilution factor \(D_i\), the expected target copies per droplet is \(\lambda_i\). Thus, it can be said that with a fixed quantity \(c_{drp}\), \(D_i\) is a predictor of \(\lambda_i\). Its relationship in equation \ref{eq:lambda_1} can then be linearized by taking the logarithm on both sides
+\begin{equation}
+    -\log{\lambda} = -\log{c_{drp}} - \log{D}, \label{eq:loglambda}
+\end{equation}
+
+Then, the proportion of target copies in the droplet population can then be estimated by fitting a binomial generalized linear model (GLM) with a log-log link:
+\[
+    g(\lambda_i) = \beta_0 + \log{D_i}.
+\]
+
+In GLM terms, \(\log{D_i}\) is the offset and \(g()\) is the complementary log-log link function. Defining \(c_{drp}\) as the slope \(\beta_0 \), then the final model is 
+\begin{equation}
+    -\log{\lambda_i} = -\log{c_{drp}} - \log{D_i}\beta_1 \label{eq:loglog}
+\end{equation}
+
+In assay analysis, the interpretation of a slope significantly greater than one implies that the proportion of target sequence is hyper reponsive to the diluted concentration. Otherwise, a slope less than one implies that the proportion of targets is less reponsive to the diluted concentration, and suggests heterogeneity.  \cite{Hu2009}.
+
+Equation \ref{eq:loglog} can be formulated as a simple linear regression model \(Y = \beta_0 + x\beta_1 + \epsilon\), where \(\beta_0\) and \(\beta_1\) denotes the slope and intercept, respectively \cite{Walpole2011}. The error term \(\epsilon\) is a random variable assumed to be normally distributed with mean 0 and constant variance \(\sigma^2\). Given a set of ordered pairs \({(x_i,y_i); i=1,2,...n}\) and an estimated a regression model \(\hat{y}_i = b_0 + x_ib_1\), the \(i\)th residual is defined as \(e_i = y_i - \hat{y}_i\). The ordinary least squares (OLS) estimator finds the values of \(b_0\) and \(b_1\) so as to minimize the residual sum of squares
+\[
+    \textup{SSRes} = \sum_{i=1}^{n}e_i = \sum_{i=1}^{n}(y_i - \hat{y}_i)^2.
+\]
+
+The OLS estimates of \(b_0\) and \(b_1\) for the regression coefficients \(beta_0\) and \(beta_1\) are 
+\[
+    b_1 = \frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i - \bar{y})}{\sum_{i=1}^{n}(x_i-\bar{x})^2}, \quad \textup{and}
+\]
+\[
+    b_0 = \frac{\sum_{i=1}^{n}y_i-b_1\sum_{i=1}^{n}x_i}{n}.
+\]
+
+% TODO - note the regression parameter estimates method mentioned in  Hu2009
+
+
+\section{Evaluation Metrics}
+\label{sec:evalmetric_ch3}
+
+\subsection{Precision of Technical Replicates}
+\label{sec:evalmetric_ch3_cv}
+% TODO : 
+% 1. Explain Technical & Biological Variation - [https://www.sigmaaldrich.com/technical-documents/articles/biology/data-analysis.html](https://www.sigmaaldrich.com/technical-documents/articles/biology/data-analysis.html)
+
+In quantitative assay studies, assay variability is typically summarized using the coefficient of variation (CV) \cite{Reed2003}. The CV of \(\hat{\lambda}\) is defined as
+\[
+    CV = \frac{SD(\hat{\lambda})}{mean(\hat{\lambda})}.
+\]
+
+A smaller CV implies the good agreement amongst replicate estimates. The advantage of CV over standard deviation (SD) is that it takes into account the magnitude of the units, making CV comparable regardless of analyte concentration.
+
+\subsection{Accuracy of Regression Model}
+\label{sec:evalmetric_ch3_R2ResSE}
+% TODO : 
+% 1. Explain Technical & Biological Variation - [https://www.sigmaaldrich.com/technical-documents/articles/biology/data-analysis.html](https://www.sigmaaldrich.com/technical-documents/articles/biology/data-analysis.html)
+% 2. Assuming tehcnical variation only, given a D_i, the expected is lambda_i
+
+Recall that given an estimated regression line, the deviation of the fitted \(\hat{y}\) from the observed \(y\) is the error term \(\epsilon\) with mean 0 and variance \(\sigma^2\). The deviation of \(\epsilon\) measures the model's \emph{lack of fit} \cite{ISLR}. The residual standard error (RSE), or \(\hat{\sigma}\), is the estimated standard deviation of the error terms from fitting a regression model and is calculated as 
+\[
+    RSE = \sqrt{\frac{1}{n-2}\; \times \textup{SSRes}}.
+\]
+
+When the model is able to predict values that are very close to the observed data, such that \(\hat{y}_i \approx y_i\) for all \(i=1,2,...,n\), then RSE will be very small. On the other hand, predicted values that are far from the actual data will have a large RSE, indicating a poor fit. Since the magnitude of RSE depends on the units of \(Y\), it is not comparable between datasets, and also it is unclear what defines an acceptable RSE. 
+
+In addition to RSE for assessing model accuracy, the coefficient of determination, \(R^2\), is unitless and is in the form of a proportion 
+\[
+    R^2 = \frac{\textup{SSTotal - SSRes}}{\textup{SSTotal}} = 1-\frac{\textup{SSRes}}{\textup{SSTotal}}.
+\]
+
+where \(\textup{SSTotal} = \sum (y_i - \bar{y})^2\) is the total variance in the response \(Y\). Since SSRes is equivalent to the amount of unexplained variance from the regression model, then in contrast, the interpretation of \(R^2\) is the proportion of variability in \(Y\) that can be explained by \(X\). An \(R^2\) close to 1 means that the regressor \(X\) explained a large percentage in the variability in \(Y\), and a value close to 0 means \(X\) does not explain much of the variability in the response.
+
+% Estimated conc as predictor for True conc %
 \section{EM Clustering}
 \label{sec:modelbased_ch3}
 
@@ -34,6 +171,7 @@ Given a maximized parameter set \(\theta^*\), the membership function is the pos
     \end{matrix*}\]
 
 The common criteria for assigning a cluster \(g\) to \(x_i\) is by finding the component \(g_i^*=\underset{g\epsilon G}{\mathrm{argmax}}(h_{g}(x_i))\).
+% TODO - define maximum a posteriori probability? (MAP)
 
 
 \subsection{Expectation Maximization}
@@ -57,52 +195,36 @@ An approach to finding a maximized likelihood function set \(\theta^*\) for a G-
     \item If \(Q(\theta_{t+1}|\theta_{t}) - Q(\theta_{t}|\theta_{t-1}) \le \xi \) (\(\xi \) is the specified termination threshold), then proceed to the last step. Otherwise, go back to Step 2.
     
     \item The final parameter set \(\theta^* = \theta_{t+1}\) is the derived maximized likelihood estimate of \(\theta\).
-    
 \end{enumerate}
 
+% \section{EM Parameter Initialization}
+% \label{sec:emparaminit_ch3}
 
+% \subsection{Kmeans Clustering}
+% \label{sec:kmeans}
 
+% \subsection{Heirarchical Clustering}
+% \label{sec:hclust}
 
+% \subsection{Peak Detection}
+% \label{sec:peakdetection}
 
+\section{Generalized Hyperbolic Distribution for Data Simulation}
+\label{sec:ghd_ch3}
+The generalized hyperbolic (GH) distribution, first introduced by Barndorff-Nielsen \cite{Barndorff1977}, is a continuous probability distribution with five parameters that describe its location, scale, asymmetry, and the decay of its tails. As the name suggests, this distribution is generalized and is a superclass of the normal inverse Gaussian distributions, scaled t-distributions, standard hyperbolic distributions, variance-gamma distributions, among others. The tails of the GH distribution can range from a Gaussian-like tail to a heavy tail of exponential behavior. Both tails can exhibit different behaviors simultaneously, where the left-hand can less heavier than the right-hand tail. This property of the GH distribution allows the modeling of asymmetric heavy-tailed populations commonly observed in finance and econometric data \cite{Takahashi2016, Nwobi2014, Necula2009, Aas2006, Bibby2003}. Its applications are in predicting risk models of exchange rates, portfolios, and stock index returns data. 
 
-
-\section{EM Parameter Initialization}
-\label{sec:emparaminit_ch3}
-
-\subsection{Kmeans Clustering}
-\label{sec:kmeans}
-
-\subsection{Heirarchical Clustering}
-\label{sec:hclust}
-
-\subsection{Peak Detection}
-\label{sec:peakdetection}
-
-\section{Evaluation Metrics}
-\label{sec:evalmetric_ch3}
-
-\subsection{Target copies per partition - \(\lambda\)}
-\label{sec:lambda}
-To count the number of target copies in a sample assay, the count of target copies per partition is determined. A partition is positive if it contains 1 or more target copies, otherwise, it is negative. The number of target copies in a partition is assumed to have a Poisson distribution
-\[ P(x) = \frac{\lambda^xe^{-\lambda}}{x!} \],
-
-where \(x\) is the count of target copies. The average occupancy per partition can then be derived as follows:
-\[ 
-    \begin{aligned}
-        1-P(x=0) &= P(x>0)\\ 
-        1-e^{-\lambda} &= \frac{N_{pos}}{N_{tot}}\\ 
-        e^{-\lambda} &= 1-\frac{N_{pos}}{N_{tot}}\\ 
-        e^{-\lambda} &= \frac{N_{neg}}{N_{tot}}\\ 
-        \hat{\lambda} &= -ln(\frac{N_{neg}}{N_{tot}})
-    \end{aligned}
+Let \(X\) be a random variable that follows a generalized hyperbolic distribution with parameters for location (\(\lambda\)), scaling (\(\delta\)), shape (\(\alpha\)), skewness (\(\beta\)), and a parameter (\(\mu\) that influences kurtosis and the GH characterization. 
+\[
+    X \sim GH(\lambda, \alpha, \beta, \delta, \mu)
 \]
+Then the probability distribution function of \(X\) is defined as
+\begin{equation}
+    P(x; \lambda, \alpha, \beta, \delta, \mu) = a(\lambda, \alpha, \beta, \delta, \mu) (\delta^2+(x-\mu)^2)^{1/2\lambda-1/4} \\ \cdot B(\lambda-0.5, \alpha\sqrt{\delta^2+x^2-2x\mu+\mu^2})e^{\beta(x-\mu)}
+\end{equation}
+where
+\[
+    a(\lambda, \alpha, \beta, \delta, \mu) = \frac{(\alpha^2-\beta^2)^{1/2\lambda}}{\sqrt{2\pi}\alpha^{\lambda-1/2}\delta^\lambda B(\lambda, \delta\sqrt{\alpha^2 - \beta^2})}
+\]
+and \(B(\lambda, \cdot)\) denotes the modified Bessel function of the third kind with index \(\lambda\).
 
-where \(N_{tot}\),\(N_{pos}\),and \(N_{neg}\) is the count of the total, positive, and negative partitions in the assay, respectively. The target concentration ()
-
-
-
-\subsection{Log-linear relationship of \(\lambda\) and dilution factor}
-\label{sec:loglinear}
-
-\subsection{Coefficient of Variation}
-\label{sec:coeffofvar}
+GH distribution mixture models was assessed in a study of \citeA{Browne2015} using real and simulated datasets. The real dataset (Old Faithful data \cite{GeyserTimes}) were observed to have skewed tails, and the resulting GH mixture model was shown to have a superior fit as compared to the scale mixture of skew-normal distributions. One hundred 2-component datasets were simulated each from a mixture of Gaussian distributions and from a mixture of skew-t distributions. When a GH mixture model were fitted using EM method, all the population parameters were very close to the true values. These demonstrate the ability of GH mixture model to closely capture real data consisting of several populations, which may then be used to simulate data for other analyses.
