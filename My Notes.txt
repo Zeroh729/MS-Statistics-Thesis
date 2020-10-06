@@ -3,7 +3,8 @@
         \begin{figure}[t]                   %-- use [t] to place figure at top, [b] to place at the bottom, [h] for here
             \centering                          %-- use this to center the figure
             \includegraphics{DisneyChart.png}   %-- include image file named as "disneychart.png" 
-            \caption{This is the figure's caption -- Disney stock chart}
+            \caption[TITLE]%
+            {TITLE- Some description}
                 \label{fig:disneystock}
         \end{figure}
 
@@ -11,7 +12,7 @@
         \begin{figure}[h]
             \centering
             \includegraphics[max size={\textwidth}{\textheight}]{FILENAME.png}
-            \caption[LIST_ENTRY_CAPTION]{CAPTION_HERE \cite{CITE_IF_EVER}}
+            \caption[TITLE]{TITLE- CAPTION_HERE \cite{CITE_IF_EVER}}
                 \label{fig:LABEL}
         \end{figure}
 
@@ -76,15 +77,8 @@
 \begin{table}[ht]   %t means place on top, replace with b if you want to place at the bottom
     \centering
     \caption{Timetable of Activities} \vspace{0.25em}
-    \begin{tabular}{|p{2in}|c|c|c|c|c|c|c|c|} \hline
-    \centering Activities (2009) & Jan   & Feb & Mar & Apr & May & Jun & Jul \\ \hline
-    Study on Prerequisite Knowledge      &   &  & ~~~\weektwo & \weekfour &  &  &  \\ \hline
-    Review of Existing Racing Strategies & ~~~\weektwo  & \weekfour & \weekfour & \weekfour &  &  &  \\ \hline
-    Identification of Best Features      &   &  &  & \weekfour & \weektwo~~~ &  &  \\ \hline
-    Development of Racing Strategies     &   &  &  & ~~~\weektwo & \weekfour & \weektwo~~~ &  \\ \hline
-    Simulation of Racing Strategies      &   &  &  & ~~~\weektwo & \weekfour & \weekthree~~ &  \\ \hline
-    Analysis and Interpretation of the Results &   &  &  &  & \weekfour & \weekfour & \weekone~~~~~ \\ \hline
-    Documentation & ~~~\weektwo  & \weekfour & \weekfour & \weekfour & \weekfour & \weekfour & \weektwo~~~ \\ \hline
+    \begin{tabular}{} \hline
+        // copy paste from https://www.tablesgenerator.com
     \end{tabular}
     \label{tab:timetableactivities}
 \end{table}

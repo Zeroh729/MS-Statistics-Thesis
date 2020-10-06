@@ -5,13 +5,77 @@
 \label{sec:data}
 
 \subsection{Real Dataset}
-\label{sec:realdataset}
+\label{sec:ch4_realdata}
+To evaluate the performance of dPCR droplet classifiers, a publicly available dataset from the study of \citeA{Lievens2016} was analyzed. Their premise is that there was no established criteria to assess dPCR assay quality; they addressed this problem in their study by proposing measures to evaluate the following criteria: i.) there should only be a single amplification product (i.e. only two fluorescence population is present), ii.) clear separation between positive and negatives, iii.) and limit the amount of intermediate fluorescence. Having set these standards, \shortciteauthor{Lievens2016} designed nine plates, or sets, of experimental parameters in aims of optimizing their own dPCR samples. They have examined twelve DNA targets from stock solutions of food and feed materials. In the first plate, reaction mixes were prepared using real-time qPCR validated conditions, this resulted in poor dPCR performance metrics. To improve the results, they experimented on experimental parameters that were proven effective in other studies. The list of the experimental factors explored are shown in [TABLE 1]. In plates 1 and 9, the experimental factors were already fixed. As for the other plates, varying levels of the specified factors were ran as a means of finding the optimal parameter. It can be seen that two DNA targets (TC1507 and M88017) were closely examined for half of the plates, this is due to the fact that both were producing significant amounts of rain. In fact, most of the samples prepared were exhibiting noise characteristics. The observed dPCR quality for each plate is summarized in [TABLE 2].  
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[max size={\textwidth}{\textheight}]{samplepreview_optimized.png}
+    \caption[Lieven's optimization results for target M88017]%
+    {Lieven's optimization results for target M88017- (A) Using real-time qPCR validated design parameters, target M88017 displays very ambiguous readouts. (B) Using the same target but with optimized dPCR parameters, it can be seen that there is significant reduction of rain and increased separation between the two populations.}
+     \label{fig:samplepreview_optimized}
+\end{figure}
+
+For DNA target M88017 in figure \ref{fig:samplepreview_optimized}, it is visually obvious that from the initial qPCR validated conditions (subfigure A) their dPCR assay optimization (subfigure B) has been effective in clearing out the rain and also in separating the two populations. However, it should be noted that this is not the case for all the targets, as some still exhibit an amount of rain fluorescence in their optimized parameters. In contrast, figure \ref{fig:samplepreview_bad} demonstrates selected samples with noisy features. All the sample replicates in plate 1 acp (subfigure A) produces more than 2 bands of fluorescence intensities. In plate 4 where PCR Enhancers were noted to be not effective, each of the target M88017 samples with no enhancer, DMS20\%, and trehalose enhancer (subfigure B) can be seen to produce heavy rain. In the case of target M88017 in plate 6 (subfigure C), it can be observed that applying sonication reduced the rain droplets. Although it is impossible to have all the \(\lambda\) estimate to be equal within a sample, since DNA extraction was from the organism, it is expected to some degree that the estimates should be very close to each other, regardless of the presence of noise.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[max size={\textwidth}{\textheight}]{samplepreview_bad.png}
+    \caption[Example dPCR results using different experimental factors]%
+    { Example dPCR results using different experimental factors- (A) Target acp using real-time qPCR validated condition. (B) Target M88017 with no PCR enhancers, DMSO20\% enhancer, and trehalose enhancer (one replicate each from left to right). (C) Target M88017 with sonication 0, 3, 6, 9, 12, and 15 (one replicate each from left to right).}
+     \label{fig:samplepreview_bad}
+\end{figure}
 
 \subsection{Simulated Dataset}
 \label{sec:simdataset}
+For this study, it is also of interest to assess the performance of droplet classifiers in extreme cases of dPCR assay quality. Since the real dataset from the previous section only has a few samples exhibiting significant amount of rain and poor separation of populations, a dataset with these characteristics were simulated. This section first reviews the simulation settings of \citeA{Jacobs2017}, and then describes the common and unique features of this study's simulation procedure.
+
+In attempt to explore the accuracy of their concentration estimator in various noise levels, \shortciteauthor{Jacobs2017} simulated 9 rain settings of 4 different concentrations. For each rain and concentration setting, 15 replicates of target samples and 3 replicates of NTC samples were generated. The middle facet in figure \ref{fig:jacobssim} displays a target sample for each setting. The columns from left to right simulates the concentrations \(\lambda = 0.1, 0.4, 1, 2.5\) (also indicated as blue, pink, red, and yellow, respectively). The rows from top to bottom simulates very minimal to high amounts of rain amplified by the increasing overlap of the two fluorescence populations. Results are summarized in the left and right facet in figure \ref{fig:jacobssim}, where for each rain and concentration setting, the distribution of \(\lambda\) point estimates should ideally be very close to the true \(\lambda\) values (colored horizontal line).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[max size={\textwidth}{\textheight}]{jacobssim.png}
+    \caption[Simulated data and accuracy results from Jacobs et. al]{Simulated data and accuracy results from Jacobs et. al- Reprinted from Jacobs, Bart K. M.; Goetghebeur, Els; Vandesompele, Jo; De Ganck, Ariane; Nijs, Nele; Beckers, Anneleen; et al. (2017): Model-Based Classification for Digital PCR: Your Umbrella for Rain. ACS Publications. Collection. https://doi.org/10.1021/acs.analchem.6b04208}
+        \label{fig:jacobssim}
+\end{figure}
+
+This experiment allowed them to compare the accuracy of quantification methods in extreme cases of clean and noisy data. However, since this dataset nor the code to reproduce it is not publicly available, other researchers who may want to compare their method using the same settings may have to simulate their own.
+
+Selected features of the simulation of \citeA{Jacobs2017} were reproduced for this study. A dataset of varying rain levels and concentrations were generated with 4 rain settings (No rain, Low rain, Moderate ran, and High rain) and 5 concentration levels (\(\lambda = 0.1, 0.2236, 0.5, 1.118, 2.5\)). The concentration range of 0.1 - 2.5  was based on \citeA{Jacobs2017}, but the values in between was modified to be a geometric sequence to mimic a dilution series. Likewise, 15 replicates of target samples and 3 replicates of NTC samples were generated. Figure \ref{fig:mysim} shows a replicate of an artificial dPCR droplet fluorescence for each setting.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[max size={\textwidth}{\textheight}]{mysim.png}
+    \caption[Simulated dataset for this study]{Simulated dataset for this study- Displayed are one sample replicates for each rain and concentration setting. Generated from fitting GH mixture models on real dPCR data.}
+        \label{fig:mysim}
+\end{figure}
+
+In order to closely mimic the behaviour of real world data, selected dPCR assays from section \ref{sec:ch4_realdata} was fitted using a GH distribution mixture model. Observe in figure \ref{fig:realdata_gts} the fluorescence distribution of Plate 7 for target GTS4032. Each assay were ran in identical conditions but with different annealing temperatures (62, 61.6, 60.9, 59.8, 58.4, 57.3, 56.5, 56 \(^{\circ}\) C; from A to E). High presence of rain and poor separation of populations is obvious in grid A. These noise characteristics were slightly reduced in B; and in C, the separation of the populations improved. In contrast, H achieved a clear separation of the fluorescence populations and very minimal amount of rain. Because of these distinct visual comparisons of the dPCR data quality, the four samples in GTS4032, marked A, B, C, and H in figure \ref{fig:realdata_gts}, were used as reference in simulating heavy, moderate, low, and no rain, respectively. A two-component GH mixture model was used to fit these samples due to the observed skew and heavy tails of the populations, the choice of this model can be found in section \ref{sec:ghd_ch3}, where GH mixture model has been found to fit empirical distributions of heavily skewed data. The R package "MixGHD" \cite{MixGHD} was used for fitting GH mixture models in the selected samples. The fitted models were used to generate datasets for each rain setting.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[max size={\textwidth}{\textheight}]{Plate 7 Target GTS4032.png}
+    \caption[Target DNA GTS4032 in plate 7 of Lievens\' dataset]%
+    {Target DNA GTS4032 in plate 7 of Lievens\' dataset- Samples A to H corresponds to the annealing temperatures 62, 61.6, 60.9, 59.8, 58.4, 57.3, 56.5, and 56 \(^{\circ}\) C.}
+        \label{fig:realdata_gts}
+\end{figure}
+
+Based on equation \ref{eq:lambda}, the count of negative and positive droplets can be derived as \(N_{neg} = exp(\log{N_{tot}} - \lambda)\) and \(N_{pos} = N_{tot} - N_{neg}\). For this simulation, the total droplet count \(N_{tot}\) is fixed at 20,000 for all samples, and \(\lambda\) takes on the values of 0.1, 0.2236, 0.5, 1.118, and 2.5 target copies per droplet. 
 
 \section{Mixture Model Fitting using EM}
 \label{sec:modelfitting}
 
+The mixture models considered for clustering droplets are the Gaussian distribution, T-distribution, and skewed-T distribution. Selection of these models are based on its numerous applications in literature and also in its availability in the R package "EMMIXskew" \cite{ref:EMMIXSkew}. However, because the the negative population in a NTC sample was rejected to follow a normal distribution \cite{ref:Trypsteen2015, ref:Jacobs2017}, Gaussian mixture model was not included in the experiments. In addition, even though GH distribution was used for model fitting for the purpose of data simulation, it was not considered here as it takes a significant amount of time to run. This downside is noted by the authors of "MixGHD" package and that code efficiency is an ongoing work. The final list of this study's proposed methods are the T-distribution and skewed-T distribution mixture models and will be abbreviated as EM-T and EM-skewT, respectively.
+
 \section{Performance Evaluation of Quantification tools}
 \label{sec:performanceeval}
+
+The list of single-channel droplet classifier methods in literature currently includes the Bio-Rad Quantasoft software, Cloudy, ddpcRquant, definetherain, and Umbrella. The differences of these droplet classifier methods along with the EM method are summarized in Table [TABLE 3]. The accessibility of these tools are listed in Table [TABLE 4]. Among these, only the Bio-Rad Quantasoft is not open-sourced and is costly to acquire. The R source codes for Cloudy, ddpcRquant, and Umbrella is publicly accessible from the specified links. Web apps are also available for the ddpcRquant and definetherain analysis. However, not all of the methods can be used due to the resource limitations of the researcher. The final list of methods to be compared against are Cloudy, ddpcRquant, Umbrella, EM-T, and EM-skewT. 
+
+% [ TABLE 3 ]
+
+% [ TABLE 4 ]
+
+The estimated mean concentration per droplet \(\lambda\) will be used as the variable of interest. For the real dataset, since the real value \(\lambda\) is unknown, it is difficult to assess the method's accuracy. For this reason, the precision of \(\lambda\) estimates within sample replicates will be used as a performance metric; this is measured here using the coefficient of variation (CV). Just from the overview of the experiment setup in [TABLE 1], it is expected that the dPCR quality for all DNA targets will be different due to the varying parameters. Thus, the estimated \(\lambda\) CV of a DNA target is grouped together by the experimental levels per plate. Each level per plate and DNA target in [TABLE 1] consists of at least four technical replicates. The exceptions are plate 2, where each primer concentration only has two replicates, and plate 7, where each temperature only has one replicate. For these exceptions, the groupings would only be on the DNA targets, regardless of the experimental levels. In total, for all level and DNA target groups per plate with the exceptions, 88 CVs will be produced \footnote{Sum of level x DNA target groups for all plates, where the levels of plates 2 and 7 are combined. Then this means plates 1, 2, and 7 have \(1 \times 12\) groups; plates 3 and 6 have \(6 \times 2\) groups; plate 4 has \(3 \times 2\) groups; plate 5 has \(8 \times 2\) groups; and plate 9 has \(1 \times 10\) groups. Adding up to \(3(12) + 2(62) + (32) + (8*3) + (10) = 88\) groups.}, and to summarize these information more effectively, the distribution of the CVs will be assessed instead — first, within plates, and then within DNA targets per plate. In the case of plate 3 where a dilution series was prepared, the log-log regression model in equation [LOGLOG EQUATION] can be fitted; and for this case, in addition to CV, \(R^2\) and RSE will also be used to assess the quantification methods.
+
+In the evaluation of methods using simulated data, since the true value of \(\lambda\) is known, then the linear regression \(\lambda = \beta_0 + \hat{\lambda}\beta_1 + \epsilon\) can be fitted. The best case scenario is that the estimated \(\hat{\lambda}\) is always equal to the true value of \(\lambda\). Thus, it is ideal that a method's \(\hat{\lambda}\) estimates will produce fitted coefficients with values very close to \(b_0=0\) and \(b_1=1\), and adequacy metrics of \(R^2=1\) and RSE=0.
