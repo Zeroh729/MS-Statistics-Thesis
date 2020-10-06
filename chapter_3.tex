@@ -54,15 +54,15 @@ The probability distribution function of \(X\) is defined as
 where \(\lambda\) is the average number of outcomes per the fixed time interval or region of \(h\) units \cite{Walpole2011}.
 
 In the context of DNA quantification, the outcome of interest, \(X\) is the number of target copies, and the region of fixed sizes \(h\) corresponds to a droplet of equal volumes \(V_{drp}\). According to the Poisson distribution, the expected value of the target copies \(X\) per droplet is \(\lambda\). Before deriving a formula for \(\lambda\), it is first noted that the droplet outcomes follow a binomial distribution with parameters \(n\), the number of independent trials, and \(p\), the number of successes. Using the MLE of \(p\), the probability of getting a success for each trial is estimated as \(\hat{p}=\frac{x}{n}\); where \(x\) is the observed successes in \(n\) trials. By defining trial as a droplet, and success as a positive droplet, then this consequently means that the probability of getting a positive for one droplet can be estimated as \(P(x>0) = \frac{N_{pos}}{N_{tot}}\), where \(N_{tot}\) and \(N_{pos}\) is the count of the total and positive droplets in the assay, respectively. Combining the concepts from the Poisson and binomial distributions, the expected value of \(X\) (target copies), \(\lambda\), can then be derived as follows :
-\[
+\begin{equation}
     \begin{aligned}
         1-P(x=0) &= P(x>0)\\
         1-e^{-\lambda} &= \frac{N_{pos}}{N_{tot}}\\
         e^{-\lambda} &= 1-\frac{N_{pos}}{N_{tot}}\\
         \hat{\lambda} &= -ln(1-\frac{N_{pos}}{N_{tot}})\\
-        \hat{\lambda} &= -ln(\frac{N_{neg}}{N_{tot}})\\
+        \hat{\lambda} &= -ln(\frac{N_{neg}}{N_{tot}}) \label{eq:lambda} \\
     \end{aligned}
-\]
+\end{equation}
 where \(N_{neg}\) is the negative droplet count \cite{Tzonev2018}. For this study, the comparison between quantification methods will be in terms of \(\hat{\lambda}\) concentration, rather than \(c_{1}\),  since the latter is just \(\hat{\lambda}\) multiplied by some constants.
 
 % TODO - Add lambda Confidence Interval formula

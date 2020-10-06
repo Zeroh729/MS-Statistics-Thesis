@@ -61,20 +61,14 @@ For assays with large differences in the distance between the two fluorescence g
 The danger of false rates due to misclassification is expounded at the clinical level, where false rates lead to the misdiagnosis of patients \cite{Tzonev2018}. One such case is the prenatal screening test for Down Syndrome; this test is expected to mostly result in normal pregnancies. However, even for a small FPR, many pregnancies are still falsely reported as positive for Down Syndrome. False negatives also risk the overall health of the patient that truly possesses the genetic disorder.
 
 % What are the factors that cause these noise %
-The whole dPCR workflow introduces multiple entry points for error and sources of variations, each of which is the possible source of such noise. The dPCR workflow, as illustrated in \figref{fig:dpcrWorkflow}, is usually a sequential procedure of extracting the sample from an organism, concocting the sample with several chemical components into a reaction mix, distributing the reaction mix to equal partitions, amplifying and detecting the target molecules using PCR, and the concentration is then finally estimated using a Poisson correction factor. In \cite{Jacobs2014}, it was emphasized that every step of the dPCR workflow inevitably allows for the introduction of different sources of variation. These variance components within the dPCR workflow is shown in \figref{fig:workflowVariation}. 
+The whole dPCR workflow introduces multiple entry points for error and sources of variations, each of which is the possible source of such noise. The dPCR workflow, as illustrated in \figref{fig:dpcrWorkflow}, is usually a sequential procedure of extracting the sample from an organism, concocting the sample with several chemical components into a reaction mix, distributing the reaction mix to equal partitions, amplifying and detecting the target molecules using PCR, and the concentration is then finally estimated using a Poisson correction factor. In \cite{Jacobs2014}, it was emphasized that every step of the dPCR workflow inevitably allows for the introduction of different sources of variation. These variance components within the dPCR workflow are shown in \figref{fig:dpcrWorkflow}. 
 
 \begin{figure}[h]
     \centering
     \includegraphics[max size={\textwidth}{\textheight}]{dpcrWorkflow.png}
-    \caption{The dPCR workflow}
+    \caption[Sources of variation in the dPCR workflow]%
+    {Sources of variation in the dPCR workflow- (A) Multiple sources of error can be introduced for each step in the dPCR workflow. Items with '*' indicate sampling error). (B) In effect, sample replicates obtained from the same organism will inevitably have variation in its fluorescence readouts. }
         \label{fig:dpcrWorkflow}
-\end{figure}
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[max size={\textwidth}{\textheight}]{workflowVariation.png}
-    \caption{Potential variation components between steps of the dPCR workflow}
-        \label{fig:workflowVariation}
 \end{figure}
 
 % Physical variations %
