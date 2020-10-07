@@ -1,0 +1,32 @@
+\chapter{Test}
+\section{Test}
+
+
+
+% Please add the following required packages to your document preamble:
+% \usepackage{booktabs}
+\bgroup
+\def\arraystretch{2}%  1 is the default, change whatever you need
+\begin{table}[]
+    \caption{Accessibility of droplet classifier methods}
+    \begin{tabularx}{\textwidth}{p{2.7cm}Xp{5.5cm}}
+    \toprule
+    \textbf{Method}    & \textbf{Accessibility}                 & \textbf{Included in Peformance Evaluation?} \\ 
+    \midrule
+    Bio-Rad QuantaSoft & Paid desktop software\(^1\)            & No \newline (not available to researcher)                                                         \\ 
+    Cloudy             & R code\(^2\)                           & Yes \newline                                                                                                     \\ 
+    ddpcRquant         & R code\(^3\) and free web app\(^4\)    & Yes, only in simulated data \newline (required NTC samples input are not available in Lievens’ dataset) \\ 
+    definetherain      & Free web app\(^5\)                     & No \newline (required positive control samples input are not available)                                 \\ 
+    Umbrella           & R code\(^6\)                           & Yes                                                                                                     \\ 
+    \bottomrule
+    \end{tabularx}
+    {\scriptsize 
+    \(^1\)https://www.bio-rad.com/en-ph/sku/1864011-quantasoft-software-regulatory-edition?ID=1864011 \newline
+    \(^2\)https://github.com/Gromgorgel/ddPCR/blob/master/Cloudy-V2-05.R \newline
+    \(^3\)https://ddpcrquant.ugent.be/ddpcrquant\_functions\_qx100.R \newline
+    \(^4\)http://statapps.ugent.be/dPCR/ddpcrquant/\newline
+    \(^5\)http://www.definetherain.org.uk/ \newline
+    \(^6\)https://github.com/statOmics/umbrella/blob/master/1D/Umbrella\_1d\_V1.R
+    }
+\end{table}
+\egroup
