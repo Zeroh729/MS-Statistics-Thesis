@@ -155,7 +155,7 @@ Most binary classification metrics are founded on the contingency table of groun
 \section{EM Clustering}
 \label{sec:modelbased_ch3}
 
-\subsection{G-component Finite Mixture Density}
+\subsection{G-component Finite Mixture Model}
 \label{sec:gcomponentmixturedensity}
 Denote \(X=\{x_1, ..., x_N; \myspace x_i \in \mathbb{R}^P\}\) as a statistically independent observation sequence where \(N\) is the number of observations and \(P\) is the dimensionality of \(x_i\), then the G-component finite mixture density is defined as 
 \[
@@ -163,36 +163,202 @@ Denote \(X=\{x_1, ..., x_N; \myspace x_i \in \mathbb{R}^P\}\) as a statistically
 \]
 where \(\pi_g\) is the mixing proportion \((\pi_g > 0, \sum_{g=1}^{G} \pi_g=1\)), \(f_g(X|\psi_g)\) is the \(g\)th component density where \(\psi_g\) are its set of parameters, \(\theta_g \in \theta=\{\theta_1, ..., \theta_G\}\) and \(\theta_g=\{\pi_g,\psi_g\}\) is the unknown parameter set that defines the density function for approximating the true probability of \(X\).
 
+\subsection{Parameter Estimation Using EM}
+\label{sec:em}
+% TODO - ME
+% The Expectation-Maximization (EM) algorithm is an approach to finding a maximized likelihood function set \(\theta^*\) for a G-component mixture model. The algorithm starts by guessing the parameter sets, and then iteratively maximizing these parameters using the E-step and M-step until the estimates converge. The EM algorithm are described more in the following :
+% \begin{enumerate}
+%     \item \(\mathit{Initialize: }\) Provide an initial guess for the unknown parameter set \(\theta_0\) and set \(t=0\) and \(Q(\theta_0|\theta_{-1})=-\infty\).
+    
+%     \item \(\mathit{E-step: }\) Compute the expected value of the log-likelihood function of \(\theta\) with respect to the current conditional distribution of \(z\) given \(x\) and the current estimates of the parameter \(\theta_t\).
+%     \begin{equation}        
+%         \begin{array}{l@{} >{\displaystyle}l}
+%         Q(\theta|\theta_t) & = E_z[\log{(f(Z,X|\theta))} | X, \theta_t] \\ 
+%                            & = \prod_{i=1}^{N}\sum_{g=1}^{G}E[\delta_{gi}|x_i,\theta_t] \log(f_g(x_i|\delta_{gi}=1, \psi_g) \pi_g) \\ 
+%                            & = \prod_{i=1}^{N}\sum_{g=1}^{G}h_{gt}(x_i) \log(f(x_i|\delta_{gi}=1, \psi_g) \pi_g) \\ 
+%         \end{array}
+%     \end{equation}
+    
+%     The posterior probability membership function of step \(t\) is computed as
+%         \begin{equation}
+%             \displaystyle
+%             h_{gt}(x_i) = \frac{\pi_{gt}f_g(x_i|\delta_{gi}=1,\psi_{gt})}{\sum_{k=1}^{G}\pi_{kt}f_k(x_i|\delta_{ki}=1,\psi_{kt})}
+%         \end{equation}
 
-\subsection{Model-based clustering}
+%     \item \(\mathit{M-step: }\) Determine the value of \(\theta_{t+1}\) which maximizes \(Q(\theta|\theta_t)\),
+%     \[
+%         \theta_{t+1}=\underset{g\epsilon G}{\mathrm{argmax}}{(Q(\theta|\theta_t))}
+%     \] 
+%     Deriving this value for the parameter \(\pi_{g,t+1}\) can be done by maximizing \(Q(\theta|\theta_t)\) with respect to \(\pi_{g,t+1}\) by \(\frac{\partial Q(\theta|\theta_t)}{\pi_{gt}}=0\), while subject to the constraint of \(\sum_{g=1}^{G}\pi_g=1\). 
+%     This finally yields to \(\pi_{g,t+1}=\frac{1}{N}\sum_{i=1}^{N}h_{gt}(x_i)\).
+
+%     \item If \(Q(\theta_{t+1}|\theta_{t}) - Q(\theta_{t}|\theta_{t-1}) \le \xi \) (\(\xi \) is the specified termination threshold), then proceed to the last step. Otherwise, go back to Step 2.
+    
+%     \item The final parameter set \(\theta^* = \theta_{t+1}\) is the derived maximized likelihood estimate of \(\theta\).
+% \end{enumerate}
+
+In modeling a mixture of densities, the parameter estimation faces the problem that an observation's component membership is not known or is ``hidden'', and this complicates the structure of the likelihood function. Data with ``hidden'' or latent variables are considered as an incomplete-data. One approach to solving the likelihood of an incomplete-data is by introducing the complete-data, the data where the component memberships are known for each observation. The Expectation-Maximization (EM) is an iterative procedure that computes the MLE of an incomplete-data by exploiting the complete-data likelihood. The EM algorithm is further discussed in the following sections, first by introducing the dependence of the incomplete-data likelihood to the complete-data likelihood, then the iterative steps of EM and its convergence property.
+
+
+\subsubsection{Incomplete-data Likelihood}
+\label{sec:incompletedataLL}
+To demonstrate this dependence, the following notations are continued from the previous section:
+\begin{itemize}
+    \item \(X=\{x_1, ..., x_N; \myspace x_i \in \mathbb{R}^P\}\) denotes the set of observations
+    \item \(C=\{C^{(1)}, ..., C^{(G)}\}\) is the set of cluster labels for each component \(g\)
+    \item \(Z=\{z_1, ..., z_N; \myspace z_i \in C^{(g)}\}\) denotes the set of the observations' component membership
+    \item \(\theta_t\) is the parameter set estimate in iteration \(t\) 
+\end{itemize}
+Then the parameter set \(\theta_t\) can have a complete-data likelihood function defined as
+\begin{equation}
+    p(Z,X|\theta_t) = \prod_{i=1}^{N}p(z_i, x_i|\theta_t),
+\end{equation}
+then by probability theory, the likelihood of the incomplete-data can be expressed using the complete-data likelihood :
+\begin{equation}
+    p(X|\theta_t) = \frac{p(Z,X|\theta_t)}{P(Z|X,\theta_t)}.
+\end{equation}
+Based on \citeA{Kung2004}, the incomplete-data log-likelihood can be obtained as a sum of two terms derived as follows :
+\begin{equation*}
+    \begin{aligned}
+    L( \theta _{t}) & =\log( p( X|\theta _{t}))\\
+     & =\log( p( X|\theta _{t}))\underbrace{\sum _{Z} P( Z|X,\theta _{t})}_{( 1)}\\
+     & =\sum _{Z}\log( p( X|\theta _{t})) P( Z|X,\theta _{t})\\
+     & =\sum _{Z}\log\left(\frac{p( X,Z|\theta )}{P( Z|X,\theta _{t})}\right) P( Z|X,\theta _{t})\\
+     & =\sum _{Z}\log( p( X,Z|\theta _{t})) P( Z|X,\theta _{t}) \ -\ \sum _{Z}\log( P( Z|X,\theta _{t})) P( Z|X,\theta _{t})\\
+     & =E_{Z}[ log( p( X,Z|\theta _{t}) |X,\theta _{t}] \ -\ E_{Z}[ log( P( Z|X,\theta _{t}) |X,\theta _{t}]\\
+     & =Q( \theta _{t} |\theta _{t}) \ +\ R( \theta _{t} |\theta _{t})
+    \end{aligned}
+\end{equation*}
+
+By denoting \(Q(\theta | \theta_{t}) \equiv E_{Z}[\log{(p(Z, X | \theta_{t}))}| X, \theta_{t}]\) as the expectation of the complete-data log-likelihood given \(X\) using the parameter set of step \(t\), and \(R(\theta | \theta_{t})\) as the entropy term, then the incomplete-data likelihood maximization problem can be accomplished by maximizing \(Q(\theta | \theta_{t})\) or \(R(\theta | \theta_{t})\). Whereas the latter can be achieved by performing simulated annealing, \(Q(\theta | \theta_{t})\) can be maximized using the convergence property demonstrated in the following:
+\begin{equation}
+\begin{aligned}
+L( \theta ) & =\log( p( X|\theta )) & \\
+ & =\log\left(\sum _{Z} p( X,Z|\theta )\underbrace{\frac{P( Z|X,\theta _{t})}{P( Z|X,\theta _{t})}}_{( 1)}\right) & \\
+ & =\log\left(\sum _{Z}\frac{p( X,Z|\theta )}{P( Z|X,\theta _{t})} P( Z|X,\theta _{t})\right) & \\
+ & =\log\left( E_{Z}\left[\frac{p( X,Z|\theta )}{P( Z|X,\theta _{t})} \ |\ X,\theta _{t}\right]\right) & \\
+ & \geqslant E_{z}\left[\log\left(\frac{p( X,Z|\theta )}{P( Z|X,\theta _{t})}\right) \ |\ X,\theta _{t}\right] & \text{(by Jensen's inequality)}\\
+ & \geqslant E_{z}[\log( p( X,Z|\theta )) \ |\ X,\theta _{t}] \ -\ E_{z}[\log( P( Z|X,\theta _{t})) \ |\ X,\theta _{t}] & \\
+ & \geqslant Q( \theta |\theta _{t}) +R( \theta |\theta _{t}) & 
+\end{aligned}
+\label{eq:emconvergence}
+\end{equation}
+
+Suppose $\displaystyle \theta ^{*}$ is an element in the parameter space and it is given to maximize $\displaystyle Q$, that is:
+\begin{equation*}
+    \theta ^{*} =\underset{\theta }{\arg\max} Q( \theta |\theta _{t})
+\end{equation*}
+Continuing the inequality from \ref{eq:emconvergence},
+\begin{equation*}
+    \begin{aligned}
+        L\left( \theta ^{*}\right) & \geqslant Q\left( \theta ^{*} |\theta _{t}\right) +R( \theta _{t} |\theta _{t})
+    \end{aligned}
+\end{equation*}
+And since $\displaystyle \ Q\left( \theta ^{*} |\theta _{t}\right)  >Q( \theta _{t} |\theta _{t})$, then it follows that
+\begin{equation}
+    \begin{aligned}
+        L\left( \theta ^{*}\right) & \geqslant Q( \theta _{t} |\theta _{t}) \ +\ R( \theta _{t} |\theta _{t})\\
+        L\left( \theta ^{*}\right) & \geqslant L( \theta _{t})
+    \end{aligned}
+    \label{eq:LLinequality}
+\end{equation}
+This shows that for a given parameter set $\displaystyle \theta _{t}$ at iteration $\displaystyle t$, a $\displaystyle \theta ^{*}$ can be chosen that will increase the incomplete-data log-likelihood $L(\theta_t)$.
+
+
+\subsubsection{Complete-data Likelihood}
+\label{sec:completedataLL}
+The indicator variable \(\delta_{gi}\) is introduced to express the status of the hidden states as
+\begin{equation*}
+    \delta ^{( g)}_{i} =\delta \left( z_{i} \ ,C^{( g)}\right) =\begin{cases}
+    1 & \text{if} \ x_{i} \ \text{was generated by } C^{( g)}\\
+    0 & \text{otherwise}
+    \end{cases}
+\end{equation*}
+
+Using the indicator variable, the complete-data likelihood is given by
+\begin{equation*}
+    \begin{array}{ r r l }
+     & p( X,Z|\theta ) \  & {\displaystyle =\prod ^{N}_{i=1}\sum ^{G}_{g=1} \delta ^{( g)}_{i} \ p\left( x_{i} ,\ z_{i} =C^{( g)} \ |\ \theta \right)}\\
+     &  & {\displaystyle =\prod ^{N}_{i=1}\sum ^{G}_{g=1} \delta ^{( g)}_{i} \ p\left( x_{i} ,\ \delta ^{( g)}_{i} =1\ |\ \theta \right)}\\
+    L_{C}( \theta ) \ \equiv  & \log( p( X,Z|\theta )) & {\displaystyle =\sum ^{N}_{i=1}\log\left(\sum ^{G}_{g=1} \delta ^{( g)}_{i} \ p\left( x_{i} ,\ \delta ^{( g)}_{i} =1\ |\ \theta \right)\right)}\\
+     &  & {\displaystyle =\sum ^{N}_{i=1}\log\left(\sum ^{G}_{g=1} \delta ^{( g)}_{i} \ p\left( x_{i} \ |\ \delta ^{( g)}_{i} =1,\theta \right) \ p\left( \delta ^{( g)}_{i} =1\ |\ \theta \right)\right)}
+    \end{array}
+\end{equation*}
+The following observations are noted to continue the equation:
+\begin{itemize}
+    \item when expanding the summation \(\sum_{g=1}^{G}\), there would only be one nonzero term. And therefore \(\delta^{g}_i\) can be pulled out from the log function without affecting the results;
+    \item $\displaystyle p\left( x_{i} |\delta ^{( g)}_{i} \ =\ 1,\ \theta \right) \ =\ p\left( x_{i} |\delta ^{( g)}_{i} \ =\ 1,\ \phi ^{( g)}\right)$
+    \item $\displaystyle p\left( \delta ^{( g)}_{i} \ =\ 1\ |\ \theta \right) \ =\ \pi ^{( g)}$
+\end{itemize}
+Putting these all together, the complete-data log-likelihood $L_{C}( \theta )$ is finally expressed as
+\begin{equation}
+    L_{C}( \theta ) \ =\sum ^{N}_{i=1}\sum ^{G}_{g=1}{\displaystyle \delta ^{( g)}_{i} \ }\log\left({\displaystyle p\left( x_{i} \ |\ \delta ^{( g)}_{i} =1,\phi ^{( g)}\right) \ \pi }^{( g)}\right)
+    \label{eq:completedataLL}
+\end{equation}
+
+The EM algorithm is an iterative algorithm that can maximize $L(\theta)$, by maximizing $L_C(\theta)$, at each iteration of the expectation step (E-step) and the maximization step (M-step). To start the algorithm, $t$ is initialized to $0$ and values for the initial parameter set $\theta_0$ are given. Then E-step and M-step execute alternatively, incrementing $t$ for each loop and updating $\theta_t$ until $L(\theta)$ converges. The E-step computes the expectation of the likelihood of the mixture model parameters by including the hidden variables. The M-step re-estimates the parameters by maximizing the expected likelihood from the E-step. These new model parameters from the M-step are then used for the next iteration until the difference of $L(\theta_{t+1})$ and $L(\theta_{t})$ become arbitrarily small.
+
+\subsubsection{Initialization}
+\label{sec:em_initialization}
+Before starting the first iteration ($t=0$), EM requires an initial guess of the parameter set for $\theta_0$. 
+
+\subsubsection{E-step}
+\label{sec:estep}
+At iteration $t$, E-step computes the function $\displaystyle Q( \theta |\theta_{t})$ using the complete-data log-likelihood from equation \refeq{eq:completedataLL}
+\begin{equation}
+    \begin{aligned}
+    Q( \theta |\theta _{t}) & =E_{Z}[ L_{C}( \theta ) \ |\ X,\ \theta _{t}]\\
+     & =E_{Z}\left[{\displaystyle \sum ^{N}_{i=1}\sum ^{G}_{g=1} \delta ^{( g)}_{i} \ }\log\left({\displaystyle p\left( x_{i} \ |\ \delta ^{( g)}_{i} =1,\phi ^{( g)}\right) \ \pi }^{( g)}\right) \ |\ X,\ \theta _{t}\right]\\
+     & =\sum ^{N}_{i=1}\sum ^{G}_{g=1} E_{Z}\left[{\displaystyle \delta ^{( g)}_{i} \ |\ x_{i} ,\ \theta }_{t}\right] \ \log\left({\displaystyle p\left( x_{i} \ |\ \delta ^{( g)}_{i} =1,\phi ^{( g)}\right) \ \pi }^{( g)}\right)\\
+     & =\sum ^{N}_{i=1}\sum ^{G}_{g=1} P\left( \delta ^{( g)}_{i} =1\ |\ x_{i} \ ,\ \theta _{t}\right){\displaystyle \ }\log\left({\displaystyle p\left( x_{i} \ |\ \delta ^{( g)}_{i} =1,\phi ^{( g)}\right) \ \pi }^{( g)}\right)
+    \end{aligned}
+    \label{eq:qfunc}
+\end{equation}
+By denoting the component membership function $h^{( g)}_{t}( x_{i})$ as the probability of the latent variable $z_i$ to be the component label $C^{(g)}$ given the observation $x_i$ and parameter set $\theta_t$, its equation can be expressed using Bayes theorem as follows
+\begin{equation}
+    \begin{aligned}
+    h^{( g)}_{t}( x_{i}) & \equiv E_{Z}\left[{\displaystyle \delta ^{( g)}_{i} \ |\ x_{i} ,\ \theta }_{t}\right]\\
+     & =P\left( \delta ^{( g)}_{i} =1\ |\ x_{i} \ ,\ \theta _{t}\right)\\
+     & =\frac{p\left( x_{i} \ |\ \delta ^{( g)}_{i} \ =\ 1,\ \theta _{t}\right) P\left( \delta ^{( g)}_{i} \ =\ 1\ |\ \theta _{t}\right)}{\sum\limits ^{G}_{k=1} p\left( x_{i} \ |\ \delta ^{( k)}_{i} \ =\ 1,\ \theta _{t}\right) P\left( \delta ^{( k)}_{i} \ =\ 1\ |\ \theta _{t}\right)}\\
+     & =\frac{p\left( x_{i} \ |\ \delta ^{( g)}_{i} \ =\ 1,\ \phi ^{( g)}_{t}\right) \pi ^{( g)}_{t}}{\sum\limits ^{G}_{k=1} p\left( x_{i} \ |\ \delta ^{( k)}_{i} \ =\ 1,\ \phi ^{( g)}_{t}\right) \pi ^{( g)}_{t}}
+    \end{aligned}
+    \label{eq:clustermemfunc}
+\end{equation}
+Given $\theta_t$, the best guess of the component membership probability $h^{( g)}_{t}( x_{i})$ for all observations and components is determined, and by doing so, $\displaystyle Q( \theta |\theta _{t})$ is now then a function of $\theta$.
+
+\subsubsection{M-step}
+\label{sec:mstep}
+At iteration $t$, M-step finds an adjusted $\theta_{t+1}$ that maximizes the function $\displaystyle Q( \theta |\theta _{t})$ with respect to $\theta$ over the parameter space $\Omega$. Recall that for a parameter set of component $g$, $\displaystyle \theta ^{( g)} =\left\{\phi ^{( g)} \ ,\ \pi ^{( g)}\right\}$, it consists of the  $g$th component mixing proportion $\pi^{( g)}$ and the density parameters $\phi^{( g)}$. The estimation of these two parameters are done sequentially and is described succeedingly.
+
+The adjusted mixing proportion $\displaystyle \pi^{(g)}_{t+1}$ is calculated independently from $\displaystyle \phi ^{( g)}_{t+1}$; and that if the component membership \(z_i\) was observed, then the mixing proportion can be obtained using ML as 
+\[\pi^{(g)}_{t+1}=\sum_{i=1}^{N}\delta_{i}^{(g)}/N.\]
+Instead, the E-step provides a component membership probability $h^{(g)}_{t}(x_{i})$ to estimate $\delta_{i}^{(g)}$
+\begin{equation*}
+    \begin{aligned}
+    \pi^{(g)}_{t} & =\sum ^{N}_{i=1} h^{( g)}_{t}( x_{i}) /N\\
+     & =\sum ^{N}_{i=1} E\left[ \delta ^{( g)}_{i} \ |\ x_{i} \ ,\ \theta _{t}\right] \ /\ N
+    \end{aligned}
+\end{equation*}
+Which means that the estimated $\pi^{(g)}_{t+1}$ is based on the posterior probabilities of $g$th component membership for all observations $X$.
+
+Following the estimation of $\displaystyle \pi^{(g)}_{t+1}$, the only variable remaining to be maximally estimated in the function $Q(\theta | \theta_t)$ are the component density parameters $\phi^{(g)}_t$ for all $g$ (based on equation \ref{eq:qfunc}). The ML estimate of $\phi^{(g)}_{t+1}$ can be obtained as an appropriate root of 
+\begin{equation*}
+    \sum ^{G}_{g=1}\sum ^{N}_{i=1} h^{( g)}_{t}( x_{i}) \ \frac{\partial \log\left( p\left( x_{i} \ |\ \delta ^{( g)}_{i} =1,\ \phi ^{( g)}_{t}\right) \ \pi ^{( g)}_{t}\right)}{\partial \phi } =0
+\end{equation*}
+
+Finally, after obtaining the estimates $\theta_{t+1}$ that maximizes $Q(\theta|\theta_t)$, until the converge rule is satisfied, the iteration $t$ is incremented, thereby carrying over $\theta_{t+1}$ to the calculation of the next E-step.
+
+\subsubsection{Convergence}
+\label{sec:convergence}
+After the M-step, it is checked if the incomplete-log likelihood has reached converge, that is
+\begin{equation*}
+    L(\theta_{t+1}) -L(\theta_{t}) \geqslant \epsilon ;
+\end{equation*}
+where $\epsilon$ is the specified termination threshold. As stated in equation \ref{eq:LLinequality}, the likelihood $\displaystyle L(\theta _{t})$ increases at each iteration, until it reaches a point where the improvement becomes arbitrarily small and is considered negligible. However, the convergence of the likelihood value from $L(\theta_{t})$ to $L^*$ does not imply that $\theta_{t}$ has reached its maximum point $\theta^*$. In most cases, the limiting value $L^*$ is a local maximum. A common workaround for this problem is to perform EM in a variety of initial parameter sets.
+
+\subsection{Model-based Clustering}
 \label{sec:modelbasedclustering}
-Denote \(C=\{C_1, ..., C_G\}\) as the set of clusters corresponding to each component. \(Z=\{z_1, ..., z_N;\myspace z_i \in C\}\) is the set of ``hidden" states where \(z_i=C_g\) means that the \(g\)th component generated \(x_i\). The indicator variable \(\delta_{gi}\) is introduced to indicate the status of the hidden states as
-\[
-    \delta_{gi} = \delta(z_i,C_g) = \left\{
-        \begin{matrix}
-            1 & \textup{ if } x_i \textup{ is generated by cluster } C_g \\ 
-            0 & \textup{ otherwise }
-        \end{matrix}\right.
-\]
 
-Suppose \(X=\{x_1, ..., x_N\}\) of \(N\) \(p\)-dimensional data vectors are observed and all \(N\) are treated as unlabelled. Then the likelihood of a parameter set \(\theta\) given the observed data \(X\) is expressed as 
-\begin{equation}
-    \begin{array}{l@{} >{\displaystyle}l}
-        f(Z,X | \theta)\; & =\prod_{i=1}^{N}f(z_i, x_i | \theta) \\ 
-                        & =\prod_{i=1}^{N} \sum_{g=1}^{G} \delta_{gi}f_g(z_i,x_i|\theta_g)\\ 
-                        & =\prod_{i=1}^{N} \sum_{g=1}^{G} \delta_{gi}f_g(x_i,z_i=C_g|\theta_g) \\ 
-                        & =\prod_{i=1}^{N} \sum_{g=1}^{G}\delta_{gi}f_g(x_i,\delta_{gi}|\theta_g)
-
-    \end{array}
-\end{equation}
-
-Suppose that a maximized parameter set \(\theta^*\) has been found. The probability of \(x_i\) belonging to the \(g\)th cluster is defined by the posterior probabilities \(h_g(x_i)=P(\delta_{gi}=1|x_i,\theta^*)\). This can be derived using Bayesian theorem 
-\begin{equation}
-    \begin{array}{l@{} >{\displaystyle}l}
-    h_g(x_i)\;& = P(\delta_{gi}=1|x_i,\theta^*) \\ 
-            & = \frac{\pi_gf_g(x_i|\delta_{gi}=1,\psi_g)}{\sum_{k=1}^{G}\pi_kf_k(x_i|\delta_{ki}=1,\psi_k)}\\ 
-    \end{array}
-\end{equation}
 
 The common method for assigning a cluster \(g\) to \(x_i\) is by using the maximum a posteriori (MAP) classification such that 
 \begin{equation}
@@ -205,55 +371,22 @@ The common method for assigning a cluster \(g\) to \(x_i\) is by using the maxim
 \noindent
 where \(\textup{MAP}(\delta_{gi})\) of 1 means that amongst all the clusters in \(C\), \(x_i\) has the highest probability to belong to cluster \(C_g\), and is therefore assigned to \(C_g\).
 
-\subsection{Expectation Maximization}
-\label{sec:em}
-The Expectation-Maximization (EM) algorithm is an approach to finding a maximized likelihood function set \(\theta^*\) for a G-component mixture model. The algorithm starts by guessing the parameter sets, and then iteratively maximizing these parameters using the E-step and M-step until the estimates converge. The EM algorithm are described more in the following :
-\begin{enumerate}
-    \item \(\mathit{Initialize: }\) Provide an initial guess for the unknown parameter set \(\theta_0\) and set \(t=0\) and \(Q(\theta_0|\theta_{-1})=-\infty\).
-    
-    \item \(\mathit{E-step: }\) Compute the expected value of the log-likelihood function of \(\theta\) with respect to the current conditional distribution of \(z\) given \(x\) and the current estimates of the parameter \(\theta_t\).
-    \begin{equation}        
-        \begin{array}{l@{} >{\displaystyle}l}
-        Q(\theta|\theta_t) & = E_z[\log{(f(Z,X|\theta))} | X, \theta_t] \\ 
-                           & = \prod_{i=1}^{N}\sum_{g=1}^{G}E[\delta_{gi}|x_i,\theta_t] \log(f_g(x_i|\delta_{gi}=1, \psi_g) \pi_g) \\ 
-                           & = \prod_{i=1}^{N}\sum_{g=1}^{G}h_{gt}(x_i) \log(f(x_i|\delta_{gi}=1, \psi_g) \pi_g) \\ 
-        \end{array}
-    \end{equation}
-    
-    The posterior probability membership function of step \(t\) is computed as
-        \begin{equation}
-            \displaystyle
-            h_{gt}(x_i) = \frac{\pi_{gt}f_g(x_i|\delta_{gi}=1,\psi_{gt})}{\sum_{k=1}^{G}\pi_{kt}f_k(x_i|\delta_{ki}=1,\psi_{kt})}
-        \end{equation}
+\section{Nonnormal Mixture Models}
+\label{sec:nonnormalMixModels}
 
-    \item \(\mathit{M-step: }\) Determine the value of \(\theta_{t+1}\) which maximizes \(Q(\theta|\theta_t)\),
-    \[
-        \theta_{t+1}=\underset{g\epsilon G}{\mathrm{argmax}}{(Q(\theta|\theta_t))}
-    \] 
-    Deriving this value for the parameter \(\pi_{g,t+1}\) can be done by maximizing \(Q(\theta|\theta_t)\) with respect to \(\pi_{g,t+1}\) by \(\frac{\partial Q(\theta|\theta_t)}{\pi_{gt}}=0\), while subject to the constraint of \(\sum_{g=1}^{G}\pi_g=1\). 
-    This finally yields to \(\pi_{g,t+1}=\frac{1}{N}\sum_{i=1}^{N}h_{gt}(x_i)\).
+\subsection{T-Mixture Models}
+\label{sec:tmix_ch3}
+% TODO - ME
 
-    \item If \(Q(\theta_{t+1}|\theta_{t}) - Q(\theta_{t}|\theta_{t-1}) \le \xi \) (\(\xi \) is the specified termination threshold), then proceed to the last step. Otherwise, go back to Step 2.
-    
-    \item The final parameter set \(\theta^* = \theta_{t+1}\) is the derived maximized likelihood estimate of \(\theta\).
-\end{enumerate}
+\subsection{Skewed T-Mixture Models}
+\label{sec:skewedtmix_ch3}
+% TODO - ME
 
-% \section{EM Parameter Initialization}
-% \label{sec:emparaminit_ch3}
-
-% \subsection{Kmeans Clustering}
-% \label{sec:kmeans}
-
-% \subsection{Heirarchical Clustering}
-% \label{sec:hclust}
-
-% \subsection{Peak Detection}
-% \label{sec:peakdetection}
-
-\section{Generalized Hyperbolic Distribution Mixture Models}
+\subsection{Generalized Hyperbolic Distribution Mixture Models}
 \label{sec:ghd_ch3}
 The generalized hyperbolic (GH) distribution, first introduced by Barndorff-Nielsen \cite{Barndorff1977}, is a continuous probability distribution with five parameters that describe its location, scale, asymmetry, and the decay of its tails. As the name suggests, this distribution is generalized and is a superclass of the normal inverse Gaussian distributions, scaled t-distributions, standard hyperbolic distributions, variance-gamma distributions, among others. The tails of the GH distribution can range from a Gaussian-like tail to a heavy tail of exponential behavior. Both tails can exhibit different behaviors simultaneously, where the left-hand can be less heavy than the right-hand tail. This property of the GH distribution allows the modeling of asymmetric heavy-tailed populations commonly observed in finance and econometric data \cite{Takahashi2016, Nwobi2014, Necula2009, Aas2006, Bibby2003}. Its applications are in predicting risk models of exchange rates, portfolios, and stock index returns data. 
 
+% TODO - ME // rewrite to f(x|theta)
 Let \(X\) be a random variable that follows a generalized hyperbolic distribution with parameters for location (\(\lambda\)), scaling (\(\delta\)), shape (\(\alpha\)), skewness (\(\beta\)), and a parameter \(\mu\) that influences kurtosis and the GH characterization. 
 \[
     X \sim GH(\lambda, \alpha, \beta, \delta, \mu)
@@ -270,5 +403,4 @@ where
     a(\lambda, \alpha, \beta, \delta, \mu) = \frac{(\alpha^2-\beta^2)^{1/2\lambda}}{\sqrt{2\pi}\alpha^{\lambda-1/2}\delta^\lambda B(\lambda, \delta\sqrt{\alpha^2 - \beta^2})}
 \]
 and \(B(\lambda, \cdot)\) denotes the modified Bessel function of the third kind with index \(\lambda\).
-
 GH distribution mixture models were assessed in a study of \citeA{Browne2015} using Old Faithful data \cite{GeyserTimes} and simulated datasets. The former dataset was observed to have skewed tails, and the resulting GH mixture model was shown to have a superior fit as compared to the scale mixture of skew-normal distributions. The simulated dataset was composed of one hundred 2-component mixtures of Gaussian and skew-t distributions. When a GH mixture model was fitted using EM algorithm, all the population parameters were very close to the true values. These demonstrate the ability of GH mixture model to closely capture real data consisting of several populations.
