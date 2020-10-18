@@ -133,7 +133,7 @@ According to the evaluation of \citeA{Trypsteen2015}, ddpcRquant is superior to 
 
 \section{Expectation-Maximization (EM) Clustering}
 \label{sec:emclustering}
-Recall from Section \ref{sec:nonparamdensityest} that model-based clustering refers to fitting a finite mixture model given a data set \(X\); then the cluster membership of observation \(x_i\) is determined by the highest probability of it belonging to a density component. Building the mixture model \(f(x|\Theta)\) requires the determination of 1) \(G\) — the number of mixture components (clusters) and 2) \(f_g(x|\theta_g)\) — the distribution assumed to be followed by the mixture component \(g\). 
+Recall from Section \ref{sec:nonparamdensityest} that model-based clustering refers to fitting a finite mixture model given a data set \(X\); then the cluster membership of observation \(x_i\) is determined by the highest probability of it belonging to a density component. Building the mixture model \(f(x|\Theta)\) requires the determination of \(G\) — the number of mixture components (clusters) and \(f_g(x|\theta_g)\) — the distribution assumed to be followed by the mixture component \(g\). 
 
 The use of mixture models for clustering has been found to have many applications. In an electricity usage profiling study, \citeA{Li2018_gmm} noticed several elongated ellipses in the scatterplot of electricity usage data, urging the use of Gaussian components for their mixture model. In another example, \cite{Choy2017} performed image segmentation using the generalized Gaussian density model, where each cluster formed is interpreted as an object. Their algorithm was able to segment objects such as a starfish, cat, or tree in photographs. Additionally, using genetic data, \citeA{Li2018_mRna} discovered a potential differentially-variable microRNA (miRNA) not yet reported in literature, upon fitting a three-component multivariate normal distribution to miRNA expression levels. 
 
@@ -160,7 +160,7 @@ Among these metrics, reporting \(\lambda\) is emphasized since this is an import
     \item Target molecules are independent in a sense that there is no interaction with one another or on device surfaces.
 \end{enumerate}
 
-When these assumptions are satisfied, the Poisson distribution can be used to derive the formula \(\lambda = -ln(1-k/n)\); where \(k\) is the number of successes in \(n\) trials. In this context, a positive droplet is considered a success and the total number of droplets or partitions is the number of trails.
+When these assumptions are satisfied, the Poisson distribution can be used to derive the formula \(\lambda = -\ln(1-k/n)\); where \(k\) is the number of successes in \(n\) trials. In this context, a positive droplet is considered a success and the total number of droplets or partitions is the number of trails.
 
 % TODO - Include here the derivation of the commonly reported measurement (copies/uL of the stock) %
 

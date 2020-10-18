@@ -34,7 +34,7 @@ Despite the optimistic performance of dPCR, several challenges are met before be
 
 An important aspect of positioning the threshold is the presence of noise features in the data. Poor quality dPCR assays add to the ambiguity of fluorescence signals that contribute to the difficulty of threshold determination. Due to the emerging demand for dPCR data analysis, \citeA{Lievens2016} has determined a set of method performance criteria to assess the quality of a dPCR assay run. Their following criteria aims to measure the efficiency of the separation between positive and negative droplets: (i) there should only be two fluorescence populations, or in other terms, a single amplification product; (ii) there should be a good separation between positives and negatives measured in peak resolution; and (iii) there should be very minimal amounts of intermediate fluorescence, also called as 'rain'. The factors affecting these noise characteristics are further explored in the succeeding sections. 
 
-"Rain" is the term used in several studies to describe droplets that emits a fluorescence intensity settling in between the positive and negative populations \cite{Lievens2016, Trypsteen2015, Witte2016, Dreo2014, Brink2018, Attali2016}. Figures \ref{fig:plate1cru} and \ref{fig:plate1tc1507} demonstrate two different DNA targets with the former showing a visually clearer distinction of the positive and negative population than the latter, of which is possessing multiple rain droplets. The data used in these figures are sourced from the dataset made publicly available by \shortciteA{Lievens2016}. Having more than two fluorescence population is also a problem, since it is not known whether these droplets do contain the target DNA or are just fluorescence residue. Poor quality dPCR assays negatively limit the level of sensitivity and accuracy it may reach. Among the consequences of unoptimized dPCR assays is droplet misclassification, which may lead to serious misdiagnoses.
+``Rain" is the term used in several studies to describe droplets that emits a fluorescence intensity settling in between the positive and negative populations \cite{Lievens2016, Trypsteen2015, Witte2016, Dreo2014, Brink2018, Attali2016}. Figures \ref{fig:plate1cru} and \ref{fig:plate1tc1507} demonstrate two different DNA targets with the former showing a visually clearer distinction of the positive and negative population than the latter, of which is possessing multiple rain droplets. The data used in these figures are sourced from the dataset made publicly available by \shortciteA{Lievens2016}. Having more than two fluorescence population is also a problem, since it is not known whether these droplets do contain the target DNA or are just fluorescence residue. Poor quality dPCR assays negatively limit the level of sensitivity and accuracy it may reach. Among the consequences of unoptimized dPCR assays is droplet misclassification, which may lead to serious misdiagnoses.
 
 \begin{figure}[h]
     \centering
@@ -61,7 +61,7 @@ The whole dPCR workflow introduces multiple entry points for technical error, wh
     \centering
     \includegraphics[max size={\textwidth}{\textheight}]{dpcrWorkflow.png}
     \caption[Sources of variation in the dPCR workflow]%
-    {Sources of variation in the dPCR workflow- (A) Multiple sources of error can be introduced for each step in the dPCR workflow. Items with '*' indicate sampling error). (B) In effect, sample replicates obtained from the same organism will inevitably have variation in its fluorescence readouts. }
+    {Sources of variation in the dPCR workflow- (A) Multiple sources of error can be introduced for each step in the dPCR workflow. Items with `*' indicate sampling error). (B) In effect, sample replicates obtained from the same organism will inevitably have variation in its fluorescence readouts. }
         \label{fig:dpcrWorkflow}
 \end{figure}
 
@@ -99,7 +99,7 @@ Expounding further on the automated threshold setting approach, current algorith
 \section{Statement of the Problem}
 \label{sec:statementprob}
 
-This thesis aims to classify dPCR droplet partitions into positive or negative by exploring Model-Based clustering via the Expectation-Maximization method. The specific objectives of this study are to:
+This thesis aims to classify dPCR droplet partitions into positive or negative by exploring Expectation-Maximization clustering, which is model-based clustering via the EM method. The specific objectives of this study are to:
 \begin{enumerate}
     \item fit G-component mixture models on dPCR droplet fluorescence intensities using Expectation Maximization,
     \item utilize EM classified droplets to provide precise quantification estimates for DNA samples with varying amounts of "noise" and concentration, and
